@@ -51,6 +51,12 @@ jobs:
           find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'
           echo "::endgroup::"
 
+      - name: Clean and reinstall Pods
+        run: |
+          rm -rf Pods Podfile.lock
+          pod deintegrate || true
+          pod install --repo-update
+
       - name: Build (нативный через Fastlane)
         env:
           # App Store Connect
