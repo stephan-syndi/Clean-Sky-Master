@@ -22,9 +22,9 @@ struct RepairKit: Identifiable, Codable, Equatable {
 }
 
 enum RepairKitType: String, Codable, CaseIterable {
-    case quick = "Быстрый ремонт"
-    case full = "Полный ремонт"
-    case premium = "Премиум обслуживание"
+    case quick = "Quick Repair"
+    case full = "Full Repair"
+    case premium = "Premium Service"
     
     var icon: String {
         switch self {
@@ -36,9 +36,9 @@ enum RepairKitType: String, Codable, CaseIterable {
     
     var description: String {
         switch self {
-        case .quick: return "Восстановить 25% здоровья"
-        case .full: return "Восстановить до 100%"
-        case .premium: return "Ремонт + заправка + бонус"
+        case .quick: return "Restore 25% health"
+        case .full: return "Restore to 100%"
+        case .premium: return "Repair + refuel + bonus"
         }
     }
     
@@ -68,8 +68,8 @@ enum RepairKitType: String, Codable, CaseIterable {
 }
 
 // MARK: - Currency Type
-// NOTE: Это активная (legacy) версия экономики.
-// Планируется миграция на MVVM модели из Models/EconomyModel.swift
+// NOTE: This is the active (legacy) version of economy.
+// Migration to MVVM models from Models/EconomyModel.swift is planned
 
 enum CurrencyType {
     case credits
@@ -94,9 +94,9 @@ enum CurrencyType {
     
     var name: String {
         switch self {
-        case .credits: return "Кредиты"
-        case .fuel: return "Топливо"
-        case .parts: return "Запчасти"
+        case .credits: return "Credits"
+        case .fuel: return "Fuel"
+        case .parts: return "Parts"
         }
     }
 }
@@ -105,17 +105,17 @@ enum CurrencyType {
 
 class EconomyManager: ObservableObject {
     @Published var credits: Int
-    @Published var fuelUnits: Int // Топливо в единицах (не процентах)
+    @Published var fuelUnits: Int // Fuel in units (not percentages)
     @Published var parts: Int
-    @Published var repairKits: [RepairKit] = [] // Инвентарь ремкомплектов
+    @Published var repairKits: [RepairKit] = [] // Repair kit inventory
     
-    // Цены в магазине
-    let fuelPrice: Int = 10 // кредитов за единицу топлива
-    let partsPrice: Int = 50 // кредитов за запчасть
+    // Shop prices
+    let fuelPrice: Int = 10 // credits per fuel unit
+    let partsPrice: Int = 50 // credits per part
     
-    // Пополнение с течением времени
+    // Auto-refill over time
     private var lastFuelRefill: Date
-    private let fuelRefillInterval: TimeInterval = 300 // 5 минут
+    private let fuelRefillInterval: TimeInterval = 300 // 5 minutes
     private let fuelRefillAmount: Int = 5
     
     init(
@@ -131,36 +131,36 @@ class EconomyManager: ObservableObject {
     
     // MARK: - Currency Operations
     
-    /// Добавить кредиты
+    /// Add credits
     func addCredits(_ amount: Int) {
         credits += amount
     }
     
-    /// Потратить кредиты
+    /// Spend credits
     func spendCredits(_ amount: Int) -> Bool {
         guard credits >= amount else { return false }
         credits -= amount
         return true
     }
     
-    /// Добавить топливо
+    /// Add fuel
     func addFuel(_ amount: Int) {
         fuelUnits += amount
     }
     
-    /// Использовать топливо
+    /// Use fuel
     func useFuel(_ amount: Int) -> Bool {
         guard fuelUnits >= amount else { return false }
         fuelUnits -= amount
         return true
     }
     
-    /// Добавить запчасти
+    /// Add parts
     func addParts(_ amount: Int) {
         parts += amount
     }
     
-    /// Использовать запчасти
+    /// Use parts
     func useParts(_ amount: Int) -> Bool {
         guard parts >= amount else { return false }
         parts -= amount
@@ -169,7 +169,7 @@ class EconomyManager: ObservableObject {
     
     // MARK: - Shop Operations
     
-    /// Купить топливо
+    /// Buy fuel
     func buyFuel(amount: Int) -> Bool {
         let cost = amount * fuelPrice
         guard spendCredits(cost) else { return false }
@@ -177,7 +177,7 @@ class EconomyManager: ObservableObject {
         return true
     }
     
-    /// Купить запчасти
+    /// Buy parts
     func buyParts(amount: Int) -> Bool {
         let cost = amount * partsPrice
         guard spendCredits(cost) else { return false }
@@ -185,7 +185,7 @@ class EconomyManager: ObservableObject {
         return true
     }
     
-    /// Продать запчасти (за половину цены)
+    /// Sell parts (for half price)
     func sellParts(amount: Int) -> Bool {
         guard useParts(amount) else { return false }
         addCredits(amount * (partsPrice / 2))
@@ -194,7 +194,7 @@ class EconomyManager: ObservableObject {
     
     // MARK: - Auto Refill
     
-    /// Проверка и автоматическое пополнение топлива
+    /// Check and auto-refill fuel
     func checkFuelRefill() {
         let now = Date()
         let timePassed = now.timeIntervalSince(lastFuelRefill)
@@ -206,7 +206,7 @@ class EconomyManager: ObservableObject {
         }
     }
     
-    /// Время до следующего пополнения топлива
+    /// Time until next fuel refill
     func timeUntilNextRefill() -> TimeInterval {
         let now = Date()
         let timePassed = now.timeIntervalSince(lastFuelRefill)
@@ -214,26 +214,26 @@ class EconomyManager: ObservableObject {
         return remaining
     }
     
-    /// Получить время последнего пополнения (для сохранения)
+    /// Get last refill time (for save)
     func getLastFuelRefill() -> Date {
         return lastFuelRefill
     }
     
-    /// Установить время последнего пополнения (при загрузке)
+    /// Set last refill time (on load)
     func setLastFuelRefill(_ date: Date) {
         lastFuelRefill = date
     }
     
     // MARK: - Repair Cost
     
-    /// Рассчитать стоимость ремонта
+    /// Calculate repair cost
     func calculateRepairCost(healthDamage: Double) -> (credits: Int, parts: Int) {
         let baseCreditCost = Int(healthDamage * 5)
-        let partsNeeded = Int(healthDamage / 10) // 1 запчасть на каждые 10% урона
+        let partsNeeded = Int(healthDamage / 10) // 1 part per 10% damage
         return (baseCreditCost, partsNeeded)
     }
     
-    /// Выполнить ремонт
+    /// Perform repair
     func performRepair(healthDamage: Double) -> Bool {
         let cost = calculateRepairCost(healthDamage: healthDamage)
         
@@ -248,26 +248,26 @@ class EconomyManager: ObservableObject {
     
     // MARK: - Refuel Cost
     
-    /// Рассчитать сколько топлива нужно для заправки до максимума
+    /// Calculate fuel needed to refuel to maximum
     func calculateRefuelNeeded(currentFuel: Double, maxFuel: Double) -> Int {
         let fuelNeeded = maxFuel - currentFuel
         return max(0, Int(ceil(fuelNeeded)))
     }
     
-    /// Заправить самолёт топливом
+    /// Refuel aircraft
     func refuelAircraft(amount: Int) -> Bool {
         return useFuel(amount)
     }
     
     // MARK: - Repair Kits Inventory
     
-    /// Добавить ремкомплект в инвентарь
+    /// Add repair kit to inventory
     func addRepairKit(type: RepairKitType) {
         let kit = RepairKit(type: type)
         repairKits.append(kit)
     }
     
-    /// Использовать ремкомплект из инвентаря
+    /// Use repair kit from inventory
     func useRepairKit(_ kit: RepairKit) -> Bool {
         if let index = repairKits.firstIndex(where: { $0.id == kit.id }) {
             repairKits.remove(at: index)
@@ -276,7 +276,7 @@ class EconomyManager: ObservableObject {
         return false
     }
     
-    /// Получить количество ремкомплектов определенного типа
+    /// Get count of repair kits of specific type
     func countRepairKits(ofType type: RepairKitType) -> Int {
         return repairKits.filter { $0.type == type }.count
     }
@@ -313,9 +313,9 @@ struct ShopPrice {
 }
 
 enum ShopCategory: String, CaseIterable {
-    case resources = "Ресурсы"
-    case upgrades = "Улучшения"
-    case repairs = "Ремонт"
+    case resources = "Resources"
+    case upgrades = "Upgrades"
+    case repairs = "Repairs"
     
     var title: String {
         return self.rawValue
@@ -336,52 +336,52 @@ extension ShopItem {
     static var resourceItems: [ShopItem] {
         [
             ShopItem(
-                name: "Топливо ×10",
-                description: "Пакет топлива для полётов",
+                name: "Fuel ×10",
+                description: "Fuel pack for flights",
                 icon: "fuelpump.fill",
                 price: .credits(100),
                 category: .resources,
-                effectDescription: "+10 единиц топлива"
+                effectDescription: "+10 fuel units"
             ),
             ShopItem(
-                name: "Топливо ×50",
-                description: "Большой запас топлива",
+                name: "Fuel ×50",
+                description: "Large fuel reserve",
                 icon: "fuelpump.fill",
                 price: .credits(450),
                 category: .resources,
-                effectDescription: "+50 единиц топлива (скидка 10%)"
+                effectDescription: "+50 fuel units (10% discount)"
             ),
             ShopItem(
-                name: "Топливо ×100",
-                description: "Огромный запас топлива",
+                name: "Fuel ×100",
+                description: "Huge fuel reserve",
                 icon: "fuelpump.fill",
                 price: .credits(800),
                 category: .resources,
-                effectDescription: "+100 единиц топлива (скидка 20%)"
+                effectDescription: "+100 fuel units (20% discount)"
             ),
             ShopItem(
-                name: "Запчасти ×5",
-                description: "Набор запчастей для ремонта",
+                name: "Parts ×5",
+                description: "Repair parts set",
                 icon: "gearshape.2.fill",
                 price: .credits(250),
                 category: .resources,
-                effectDescription: "+5 запчастей"
+                effectDescription: "+5 parts"
             ),
             ShopItem(
-                name: "Запчасти ×20",
-                description: "Большой набор запчастей",
+                name: "Parts ×20",
+                description: "Large parts set",
                 icon: "gearshape.2.fill",
                 price: .credits(900),
                 category: .resources,
-                effectDescription: "+20 запчастей (скидка 10%)"
+                effectDescription: "+20 parts (10% discount)"
             ),
             ShopItem(
-                name: "Набор выживания",
-                description: "Топливо и запчасти",
+                name: "Survival Kit",
+                description: "Fuel and parts",
                 icon: "cross.case.fill",
                 price: .credits(600),
                 category: .resources,
-                effectDescription: "+25 топлива, +10 запчастей"
+                effectDescription: "+25 fuel, +10 parts"
             )
         ]
     }
@@ -389,44 +389,44 @@ extension ShopItem {
     static var upgradeItems: [ShopItem] {
         [
             ShopItem(
-                name: "Усиленная броня",
-                description: "Повышает защиту самолёта",
+                name: "Reinforced Armor",
+                description: "Increases aircraft protection",
                 icon: "shield.fill",
                 price: .mixed(credits: 500, parts: 5),
                 category: .upgrades,
-                effectDescription: "+5 брони"
+                effectDescription: "+5 armor"
             ),
             ShopItem(
-                name: "Улучшенный двигатель",
-                description: "Увеличивает скорость",
+                name: "Upgraded Engine",
+                description: "Increases speed",
                 icon: "speedometer",
                 price: .mixed(credits: 800, parts: 8),
                 category: .upgrades,
-                effectDescription: "+50 к скорости"
+                effectDescription: "+50 speed"
             ),
             ShopItem(
-                name: "Оружейная система Mk.II",
-                description: "Усиливает вооружение",
+                name: "Weapon System Mk.II",
+                description: "Enhances armament",
                 icon: "scope",
                 price: .mixed(credits: 600, parts: 6),
                 category: .upgrades,
-                effectDescription: "+3 к оружию"
+                effectDescription: "+3 weapons"
             ),
             ShopItem(
-                name: "Грузовой отсек",
-                description: "Увеличивает грузоподъёмность",
+                name: "Cargo Bay",
+                description: "Increases cargo capacity",
                 icon: "shippingbox.fill",
                 price: .mixed(credits: 400, parts: 4),
                 category: .upgrades,
-                effectDescription: "+50 к грузу"
+                effectDescription: "+50 cargo"
             ),
             ShopItem(
-                name: "Расширенный топливный бак",
-                description: "Увеличивает запас топлива",
+                name: "Extended Fuel Tank",
+                description: "Increases fuel capacity",
                 icon: "fuelpump.circle.fill",
                 price: .mixed(credits: 700, parts: 7),
                 category: .upgrades,
-                effectDescription: "+20 к макс. топливу"
+                effectDescription: "+20 max fuel"
             )
         ]
     }
@@ -434,28 +434,28 @@ extension ShopItem {
     static var repairItems: [ShopItem] {
         [
             ShopItem(
-                name: "Быстрый ремонт",
-                description: "Восстановить 25% здоровья",
+                name: "Quick Repair",
+                description: "Restore 25% health",
                 icon: "bandage.fill",
                 price: .mixed(credits: 100, parts: 2),
                 category: .repairs,
-                effectDescription: "+25% здоровья"
+                effectDescription: "+25% health"
             ),
             ShopItem(
-                name: "Полный ремонт",
-                description: "Восстановить до 100%",
+                name: "Full Repair",
+                description: "Restore to 100%",
                 icon: "cross.fill",
                 price: .mixed(credits: 350, parts: 7),
                 category: .repairs,
-                effectDescription: "Здоровье → 100%"
+                effectDescription: "Health → 100%"
             ),
             ShopItem(
-                name: "Премиум обслуживание",
-                description: "Ремонт + заправка + бонус",
+                name: "Premium Service",
+                description: "Repair + refuel + bonus",
                 icon: "checkmark.seal.fill",
                 price: .mixed(credits: 500, parts: 5),
                 category: .repairs,
-                effectDescription: "100% здоровье, +50 топлива, +5% к характеристикам"
+                effectDescription: "100% health, +50 fuel, +5% to stats"
             )
         ]
     }

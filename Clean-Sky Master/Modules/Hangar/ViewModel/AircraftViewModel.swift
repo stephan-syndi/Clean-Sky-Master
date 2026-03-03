@@ -10,13 +10,13 @@ import Combine
 
 // MARK: - Aircraft View Model
 //
-// АКТИВНЫЙ MVVM VIEW MODEL (готов к использованию)
-// Использует struct Aircraft из Models/Aircraft.swift
+// ACTIVE MVVM VIEW MODEL (ready to use)
+// Uses struct Aircraft from Models/Aircraft.swift
 //
-// NOTE: Проект пока использует legacy class AircraftStats из AircraftStats.swift
-// Этот ViewModel готов к использованию при миграции на полный MVVM
+// NOTE: Project still uses legacy class AircraftStats from AircraftStats.swift
+// This ViewModel is ready to use when migrating to full MVVM
 
-/// ViewModel для управления самолётом
+/// ViewModel for aircraft management
 class AircraftViewModel: ObservableObject {
     @Published var aircraft: Aircraft
     
@@ -26,17 +26,17 @@ class AircraftViewModel: ObservableObject {
     
     // MARK: - Actions
     
-    /// Заправка топлива
+    /// Refuel
     func refuel(amount: Double) {
         aircraft.fuel = min(aircraft.maxFuel, aircraft.fuel + amount)
     }
     
-    /// Ремонт
+    /// Repair
     func repair(amount: Double) {
         aircraft.health = min(100, aircraft.health + amount)
     }
     
-    /// Получение урона с учётом брони
+    /// Take damage with armor reduction
     func takeDamage(_ rawDamage: Double) -> Double {
         let armorReduction = Double(aircraft.armor) * 0.5
         let actualDamage = max(1.0, rawDamage - armorReduction)
@@ -44,24 +44,24 @@ class AircraftViewModel: ObservableObject {
         return actualDamage
     }
     
-    /// Использование топлива
+    /// Consume fuel
     func consumeFuel(_ amount: Double) {
         aircraft.fuel = max(0, aircraft.fuel - amount)
     }
     
-    /// Установка модуля
+    /// Install module
     func installModule(_ module: String) {
         if !aircraft.installedModules.contains(module) {
             aircraft.installedModules.append(module)
         }
     }
     
-    /// Удаление модуля
+    /// Remove module
     func removeModule(_ module: String) {
         aircraft.installedModules.removeAll { $0 == module }
     }
     
-    /// Улучшение характеристики
+    /// Upgrade stats
     func upgradeArmor(by value: Int) {
         aircraft.armor += value
     }
@@ -84,13 +84,13 @@ class AircraftViewModel: ObservableObject {
     
     // MARK: - Mission Readiness
     
-    /// Проверка готовности к миссии
+    /// Check mission readiness
     func isReadyForMission() -> (ready: Bool, reason: String?) {
         if aircraft.fuel < 20 {
-            return (false, "Недостаточно топлива")
+            return (false, "Insufficient fuel")
         }
         if aircraft.health < 30 {
-            return (false, "Самолёт требует ремонта")
+            return (false, "Aircraft needs repair")
         }
         return (true, nil)
     }

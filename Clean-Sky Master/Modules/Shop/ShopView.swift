@@ -10,10 +10,10 @@ import Combine
 
 // MARK: - Shop View
 //
-// Использует единый источник данных через @EnvironmentObject:
-// - GameState для доступа к economy (кредиты, топливо, запчасти)
-// - Синхронизировано с MainDashboardView и другими View
-// - Все изменения отражаются во всем приложении
+// Uses unified data source via @EnvironmentObject:
+// - GameState for access to economy (credits, fuel, parts)
+// - Synchronized with MainDashboardView and other Views
+// - All changes are reflected throughout the application
 
 struct ShopView: View {
     @EnvironmentObject var gameState: GameState
@@ -29,7 +29,7 @@ struct ShopView: View {
     
     var body: some View {
         ZStack {
-            // Фон
+            // Background
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 0.05, green: 0.1, blue: 0.2),
@@ -41,14 +41,14 @@ struct ShopView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Шапка
+                // Header
                 VStack(spacing: 16) {
-                    Text("МАГАЗИН")
+                    Text("SHOP")
                         .font(.system(size: 28, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .padding(.top)
                     
-                    // Валюты
+                    // Currencies
                     HStack(spacing: 12) {
                         CurrencyBadge(
                             icon: CurrencyType.credits.icon,
@@ -73,8 +73,8 @@ struct ShopView: View {
                 .padding(.bottom)
                 .background(Color.black.opacity(0.3))
                 
-                // Категории
-                Picker("Категория", selection: $selectedCategory) {
+                // Categories
+                Picker("Category", selection: $selectedCategory) {
                     ForEach([ShopCategory.resources, .upgrades, .repairs], id: \.self) { category in
                         Label(category.title, systemImage: category.icon)
                             .tag(category)
@@ -83,7 +83,7 @@ struct ShopView: View {
                 .pickerStyle(.segmented)
                 .padding()
                 
-                // Товары
+                // Items
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(filteredItems) { item in
@@ -113,7 +113,7 @@ struct ShopView: View {
                 .environmentObject(gameState)
             }
         }
-        .alert("Результат покупки", isPresented: $showResult) {
+        .alert("Purchase Result", isPresented: $showResult) {
             Button("OK") {
                 showResult = false
                 showPurchaseConfirmation = false
@@ -196,7 +196,7 @@ struct ShopItemCard: View {
                     Spacer()
                 }
                 
-                // Эффект
+                // Effect
                 HStack(spacing: 6) {
                     Image(systemName: "star.fill")
                         .font(.system(size: 10))
@@ -215,9 +215,9 @@ struct ShopItemCard: View {
                 Divider()
                     .background(Color.white.opacity(0.1))
                 
-                // Цена
+                // Price
                 HStack {
-                    Text("ЦЕНА:")
+                    Text("PRICE:")
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.gray)
                     
@@ -316,7 +316,7 @@ struct PurchaseConfirmationSheet: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // Иконка
+                // Icon
                 ZStack {
                     Circle()
                         .fill(Color.blue.opacity(0.2))
@@ -349,9 +349,9 @@ struct PurchaseConfirmationSheet: View {
                         )
                 }
                 
-                // Стоимость
+                // Cost
                 VStack(spacing: 12) {
-                    Text("СТОИМОСТЬ")
+                    Text("COST")
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.gray)
                     
@@ -396,12 +396,12 @@ struct PurchaseConfirmationSheet: View {
                 
                 Spacer()
                 
-                // Кнопки
+                // Buttons
                 VStack(spacing: 12) {
                     Button(action: {
                         performPurchase()
                     }) {
-                        Text("КУПИТЬ")
+                        Text("BUY")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -426,13 +426,13 @@ struct PurchaseConfirmationSheet: View {
                     .disabled(!canAfford)
                     
                     if !canAfford {
-                        Text("Недостаточно ресурсов")
+                        Text("Insufficient resources")
                             .font(.system(size: 14))
                             .foregroundColor(.red)
                     }
                     
                     Button(action: { dismiss() }) {
-                        Text("Отмена")
+                        Text("Cancel")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity)
@@ -448,17 +448,17 @@ struct PurchaseConfirmationSheet: View {
     private func performPurchase() {
         var result = TransactionResult(
             success: false,
-            message: "Ошибка покупки",
+            message: "Purchase error",
             creditsSpent: 0,
             fuelSpent: 0,
             partsSpent: 0
         )
         
-        // Проверка и списание ресурсов
+        // Check and deduct resources
         guard canAfford else {
             result = TransactionResult(
                 success: false,
-                message: "Недостаточно ресурсов для покупки",
+                message: "Insufficient resources for purchase",
                 creditsSpent: 0,
                 fuelSpent: 0,
                 partsSpent: 0
@@ -467,7 +467,7 @@ struct PurchaseConfirmationSheet: View {
             return
         }
         
-        // Списываем валюту
+        // Deduct currency
         if item.price.credits > 0 {
             _ = gameState.economy.spendCredits(item.price.credits)
         }
@@ -478,12 +478,12 @@ struct PurchaseConfirmationSheet: View {
             _ = gameState.economy.useParts(item.price.parts)
         }
         
-        // Применяем эффект покупки
+        // Apply purchase effect
         applyItemEffect()
         
         result = TransactionResult(
             success: true,
-            message: "Покупка выполнена успешно!",
+            message: "Purchase completed successfully!",
             creditsSpent: item.price.credits,
             fuelSpent: item.price.fuel,
             partsSpent: item.price.parts
@@ -493,37 +493,37 @@ struct PurchaseConfirmationSheet: View {
     }
     
     private func applyItemEffect() {
-        // Применяем эффекты в зависимости от товара
+        // Apply effects based on item
         switch item.name {
-        case "Топливо ×10":
+        case "Fuel ×10":
             gameState.economy.addFuel(10)
-        case "Топливо ×50":
+        case "Fuel ×50":
             gameState.economy.addFuel(50)
-        case "Топливо ×100":
+        case "Fuel ×100":
             gameState.economy.addFuel(100)
-        case "Запчасти ×5":
+        case "Parts ×5":
             gameState.economy.addParts(5)
-        case "Запчасти ×20":
+        case "Parts ×20":
             gameState.economy.addParts(20)
-        case "Набор выживания":
+        case "Survival Kit":
             gameState.economy.addFuel(25)
             gameState.economy.addParts(10)
-        case "Усиленная броня":
+        case "Reinforced Armor":
             gameState.aircraft.armor += 5
-        case "Улучшенный двигатель":
+        case "Improved Engine":
             gameState.aircraft.speed += 50
-        case "Оружейная система Mk.II":
+        case "Weapon System Mk.II":
             gameState.aircraft.firepower += 3
-        case "Грузовой отсек":
+        case "Cargo Bay":
             gameState.aircraft.cargo += 50
-        case "Расширенный топливный бак":
+        case "Extended Fuel Tank":
             gameState.aircraft.maxFuel += 20
-        // Ремкомплекты теперь добавляются в инвентарь
-        case "Быстрый ремонт":
+        // Repair kits are now added to inventory
+        case "Quick Repair":
             gameState.economy.addRepairKit(type: .quick)
-        case "Полный ремонт":
+        case "Full Repair":
             gameState.economy.addRepairKit(type: .full)
-        case "Премиум обслуживание":
+        case "Premium Service":
             gameState.economy.addRepairKit(type: .premium)
         default:
             break

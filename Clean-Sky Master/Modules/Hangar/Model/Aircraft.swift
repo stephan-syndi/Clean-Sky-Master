@@ -9,22 +9,22 @@ import Foundation
 
 // MARK: - Aircraft (Model)
 //
-// АКТИВНАЯ MVVM МОДЕЛЬ
-// Используется с AircraftViewModel из ViewModels/
+// ACTIVE MVVM MODEL
+// Used with AircraftViewModel from ViewModels/
 //
-// NOTE: Проект пока использует legacy class AircraftStats из AircraftStats.swift
-// Эта модель готова к использованию при миграции на полный MVVM
+// NOTE: Project currently uses legacy class AircraftStats from AircraftStats.swift
+// This model is ready for use when migrating to full MVVM
 
-/// Модель самолёта - чистые данные без логики
+/// Aircraft model - pure data without logic
 struct Aircraft: Codable {
-    var fuel: Double // Топливо (0-100)
-    var maxFuel: Double // Максимальная ёмкость
-    var armor: Int // Броня
-    var firepower: Int // Оружие
-    var speed: Int // Скорость
-    var cargo: Int // Грузоподъёмность
-    var health: Double // Здоровье корпуса (0-100)
-    var installedModules: [String] // Установленные модули
+    var fuel: Double // Fuel (0-100)
+    var maxFuel: Double // Maximum capacity
+    var armor: Int // Armor
+    var firepower: Int // Weapons
+    var speed: Int // Speed
+    var cargo: Int // Cargo capacity
+    var health: Double // Hull health (0-100)
+    var installedModules: [String] // Installed modules
     
     init(
         fuel: Double = 75.0,
@@ -48,7 +48,7 @@ struct Aircraft: Codable {
     
     // MARK: - Computed Properties
     
-    /// Расчёт Battle Rating (боевой мощи)
+    /// Battle Rating calculation (combat power)
     var battleRating: Int {
         let armorPoints = armor * 2
         let firepowerPoints = firepower * 3
@@ -58,7 +58,7 @@ struct Aircraft: Codable {
         return armorPoints + firepowerPoints + speedPoints + healthBonus + moduleBonus
     }
     
-    /// Максимальная дальность полёта
+    /// Maximum flight range
     var maxRange: Double {
         let baseRange = 1000.0
         let fuelCoefficient = fuel / 100.0
@@ -66,7 +66,7 @@ struct Aircraft: Codable {
         return baseRange * fuelCoefficient * cargoModifier
     }
     
-    /// Шанс уклонения в бою
+    /// Evasion chance in combat
     var evasionChance: Double {
         let baseEvasion = 0.3
         let speedBonus = Double(speed) / 2000.0
@@ -76,7 +76,7 @@ struct Aircraft: Codable {
     
     // MARK: - Methods
     
-    /// Шанс успеха миссии на основе расстояния
+    /// Mission success chance based on distance
     func successChance(forDistance distance: Double) -> Double {
         let range = maxRange
         if distance > range * 1.5 {
@@ -88,25 +88,25 @@ struct Aircraft: Codable {
         }
     }
     
-    /// Расход топлива на миссию (в процентах)
+    /// Fuel consumption for mission (in percentage)
     func fuelConsumption(forDistance distance: Double) -> Double {
         let baseFuel = (distance / 10.0)
         let cargoModifier = 1.0 + (Double(cargo) / 200.0)
         return baseFuel * cargoModifier
     }
     
-    /// Проверка готовности к миссии
+    /// Check readiness for mission
     func isReadyForMission() -> (ready: Bool, reason: String?) {
         if fuel < 20 {
-            return (false, "Недостаточно топлива")
+            return (false, "Insufficient fuel")
         }
         if health < 30 {
-            return (false, "Самолёт требует ремонта")
+            return (false, "Aircraft requires repair")
         }
         return (true, nil)
     }
     
-    /// Получение урона с учётом брони
+    /// Take damage accounting for armor
     mutating func takeDamage(_ rawDamage: Double) -> Double {
         let armorReduction = Double(armor) * 0.5
         let actualDamage = max(1.0, rawDamage - armorReduction)

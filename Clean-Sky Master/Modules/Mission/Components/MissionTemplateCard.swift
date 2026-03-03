@@ -64,7 +64,7 @@ struct MissionTemplateCard: View {
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.red)
                         } else {
-                            Text("✓ Доступна")
+                            Text("✓ Available")
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.green)
                         }
@@ -111,7 +111,7 @@ struct MissionTemplateCard: View {
                     }
                     
                     if template.choices != nil {
-                        MissionStatChip(icon: "arrow.triangle.branch", value: "Выбор")
+                        MissionStatChip(icon: "arrow.triangle.branch", value: "Choice")
                     }
                     
                     Spacer()

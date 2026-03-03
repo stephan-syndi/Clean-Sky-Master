@@ -9,27 +9,27 @@ import Foundation
 
 // MARK: - Pilot (Model)
 //
-// АКТИВНАЯ MVVM МОДЕЛЬ
-// Используется с PilotViewModel из ViewModels/
+// ACTIVE MVVM MODEL
+// Used with PilotViewModel from ViewModels/
 //
-// Примечание: Название PilotData используется чтобы избежать конфликта
-// с legacy class Pilot (PilotLegacy) из AircraftStats.swift
+// Note: PilotData name is used to avoid conflict
+// with legacy class Pilot (PilotLegacy) from AircraftStats.swift
 
-/// Модель пилота - чистые данные без логики
+/// Pilot model - pure data without logic
 struct PilotData {
     var name: String
     var level: Int
     var experience: Int
     var skillPoints: Int
-    var battleRating: Int // Battle Rating - показатель мастерства пилота
+    var battleRating: Int // Battle Rating - pilot mastery indicator
     
-    // Навыки пилота
-    var combatSkill: Int // Боевое мастерство
-    var navigationSkill: Int // Навигация
-    var efficiencySkill: Int // Эффективность
+    // Pilot skills
+    var combatSkill: Int // Combat mastery
+    var navigationSkill: Int // Navigation
+    var efficiencySkill: Int // Efficiency
     
     init(
-        name: String = "Капитан",
+        name: String = "Captain",
         level: Int = 1,
         experience: Int = 0,
         skillPoints: Int = 0,
@@ -50,56 +50,56 @@ struct PilotData {
     
     // MARK: - Computed Properties
     
-    /// Опыт для следующего уровня
+    /// Experience for next level
     var experienceForNextLevel: Int {
         return level * 100
     }
     
-    /// Прогресс до следующего уровня (0.0 - 1.0)
+    /// Progress to next level (0.0 - 1.0)
     var levelProgress: Double {
         return Double(experience) / Double(experienceForNextLevel)
     }
     
     // MARK: - Skill Bonuses
     
-    /// Бонус к урону от боевого навыка
+    /// Damage bonus from combat skill
     func combatBonus() -> Double {
         return 1.0 + (Double(combatSkill) * 0.05)
     }
     
-    /// Снижение расхода топлива от навигации
+    /// Fuel consumption reduction from navigation
     func navigationBonus() -> Double {
         return max(0.5, 1.0 - (Double(navigationSkill) * 0.03))
     }
     
-    /// Увеличение дохода от эффективности
+    /// Income increase from efficiency
     func efficiencyBonus() -> Double {
         return 1.0 + (Double(efficiencySkill) * 0.04)
     }
     
-    /// Общий множитель эффективности
+    /// Overall  effectiveness multiplier
     func effectivenessMultiplier() -> Double {
         let levelBonus = 1.0 + (Double(level) * 0.02)
         let skillBonus = combatBonus()
         return levelBonus * skillBonus
     }
     
-    /// Шанс критического удара
+    /// Critical hit chance
     func criticalChance() -> Double {
         return min(0.5, 0.1 + (Double(combatSkill) * 0.02))
     }
     
     // MARK: - Battle Rating
     
-    /// Расчёт Battle Rating на основе уровня и навыков
-    /// BR повышается с уровнем пилота и прокачкой навыков
+    /// Battle Rating calculation based on level and skills
+    /// BR increases with pilot level and skill upgrades
     mutating func calculateBattleRating() {
-        let levelBR = level // 1 BR за уровень
-        let skillBR = (combatSkill + navigationSkill + efficiencySkill) / 3 // Средний навык
+        let levelBR = level // 1 BR per level
+        let skillBR = (combatSkill + navigationSkill + efficiencySkill) / 3 // Average skill
         battleRating = max(1, levelBR + skillBR)
     }
     
-    /// Повысить BR после выполнения сложной миссии
+    /// Increase BR after completing a difficult mission
     mutating func increaseBattleRating(by amount: Int = 1) {
         battleRating += amount
     }

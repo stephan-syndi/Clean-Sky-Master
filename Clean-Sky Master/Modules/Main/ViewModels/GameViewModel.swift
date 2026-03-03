@@ -10,15 +10,15 @@ import Combine
 
 // MARK: - Game View Model
 //
-// АКТИВНЫЙ MVVM VIEW MODEL (готов к использованию)
+// ACTIVE MVVM VIEW MODEL (ready to use)
 // 
-// Координирует все подсистемы игры через MVVM паттерн
-// Использует: Aircraft (struct), PilotData (struct), EconomyData (struct)
+// Coordinates all game subsystems through MVVM pattern
+// Uses: Aircraft (struct), PilotData (struct), EconomyData (struct)
 //
-// NOTE: Проект пока использует legacy GameState из AircraftStats.swift
-// Этот ViewModel готов к использованию при миграции на полный MVVM
+// NOTE: Project still uses legacy GameState from AircraftStats.swift
+// This ViewModel is ready to use when migrating to full MVVM
 
-/// Главный ViewModel игры - координирует все подсистемы
+/// Main game ViewModel - coordinates all subsystems
 class GameViewModel: ObservableObject {
     @Published var aircraftVM: AircraftViewModel
     @Published var pilotVM: PilotViewModel
@@ -53,21 +53,21 @@ class GameViewModel: ObservableObject {
     
     // MARK: - Mission Methods
     
-    /// Рассчитать итоговый доход от миссии
+    /// Calculate total mission reward
     func calculateMissionReward(baseReward: Int) -> Int {
         let cargoBonus = 1.0 + (Double(aircraft.cargo) / 500.0)
         let pilotBonus = pilot.efficiencyBonus()
         return Int(Double(baseReward) * cargoBonus * pilotBonus)
     }
     
-    /// Рассчитать расход топлива на миссию
+    /// Calculate fuel cost for mission
     func calculateFuelCost(distance: Double) -> Double {
         let baseCost = aircraft.fuelConsumption(forDistance: distance)
         let pilotReduction = pilot.navigationBonus()
         return baseCost * pilotReduction
     }
     
-    /// Рассчитать урон в бою
+    /// Calculate combat damage
     func calculateDamage(multiplier: Double = 1.0) -> Double {
         let baseDamage = Double(aircraft.firepower) * 10.0
         let pilotMultiplier = pilot.effectivenessMultiplier()
@@ -77,9 +77,9 @@ class GameViewModel: ObservableObject {
         return baseDamage * pilotMultiplier * multiplier * (isCritical ? 2.0 : 1.0)
     }
     
-    /// Выполнить миссию (упрощённая логика)
+    /// Execute mission (simplified logic)
     func executeMission(distance: Double, baseReward: Int, difficulty: Double = 1.0) -> MissionResult {
-        // Проверка готовности
+        // Check readiness
         let readiness = aircraft.isReadyForMission()
         guard readiness.ready else {
             return MissionResult(
@@ -88,17 +88,17 @@ class GameViewModel: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: readiness.reason ?? "Миссия невозможна"
+                message: "Mission impossible"
             )
         }
         
-        // Расход топлива (в процентах)
+        // Fuel cost (in percent)
         let fuelCostPercent = calculateFuelCost(distance: distance)
         
-        // Конвертируем в единицы топлива (1% = 1 единица)
+        // Convert to fuel units (1% = 1 unit)
         let fuelUnitsNeeded = Int(ceil(fuelCostPercent))
         
-        // Проверяем наличие топлива в экономике
+        // Check fuel availability in economy
         guard economyVM.fuelUnits >= fuelUnitsNeeded else {
             return MissionResult(
                 success: false,
@@ -106,15 +106,15 @@ class GameViewModel: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: "Недостаточно топлива (нужно \(fuelUnitsNeeded) ед.)"
+                message: "Insufficient fuel (need \(fuelUnitsNeeded) units)"
             )
         }
         
-        // Списываем топливо
+        // Deduct fuel
         economyVM.useFuel(fuelUnitsNeeded)
         aircraftVM.consumeFuel(fuelCostPercent)
         
-        // Шанс успеха
+        // Success chance
         let successChance = aircraft.successChance(forDistance: distance)
         let success = Double.random(in: 0...1) < successChance
         
@@ -127,11 +127,11 @@ class GameViewModel: ObservableObject {
                 fuelUsed: fuelCostPercent,
                 damageReceived: damage,
                 experienceGained: 20,
-                message: "Миссия провалена"
+                message: "Mission failed"
             )
         }
         
-        // Бой (если есть)
+        // Combat (if any)
         var damageReceived = 0.0
         if difficulty > 1.0 {
             let evasionSuccess = Double.random(in: 0...1) < aircraft.evasionChance
@@ -141,17 +141,17 @@ class GameViewModel: ObservableObject {
             }
         }
         
-        // Награда в кредитах
+        // Reward in credits
         let reward = calculateMissionReward(baseReward: baseReward)
         economyVM.addCredits(reward)
         
-        // Шанс получить запчасти
+        // Chance to get parts
         if Double.random(in: 0...1) < 0.3 {
             let partsFound = Int.random(in: 1...3)
             economyVM.addParts(partsFound)
         }
         
-        // Опыт
+        // Experience
         let experience = Int(50.0 * difficulty)
         pilotVM.addExperience(experience)
         
@@ -161,7 +161,7 @@ class GameViewModel: ObservableObject {
             fuelUsed: fuelCostPercent,
             damageReceived: damageReceived,
             experienceGained: experience,
-            message: "Миссия выполнена успешно!"
+            message: "Mission completed successfully!"
         )
     }
 }

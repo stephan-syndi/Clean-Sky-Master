@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - Completed Mission Model
 
-/// Модель завершенной миссии для истории
+/// Completed mission model for history
 struct CompletedMission: Identifiable, Codable {
     let id: UUID
     let templateName: String
@@ -18,14 +18,14 @@ struct CompletedMission: Identifiable, Codable {
     let date: Date
     let status: MissionStatus
     let distance: Int
-    let flightTime: Int // минуты
+    let flightTime: Int // minutes
     let reward: Int
     let experienceGained: Int
     let fuelUsed: Double
     let damageReceived: Double
     let report: String
     
-    // Для отображения в UI (совместимость с существующим кодом)
+    // For UI display (compatibility with existing code)
     var type: MissionType {
         return category.asMissionType
     }
@@ -35,7 +35,7 @@ struct CompletedMission: Identifiable, Codable {
     }
     
     var aircraft: String {
-        return "Текущий самолёт" // TODO: добавить сохранение названия самолета
+        return "Current aircraft" // TODO: add aircraft name saving
     }
     
     init(
@@ -84,7 +84,7 @@ extension MissionCategory {
 
 // MARK: - Mission History ViewModel
 
-/// ViewModel для управления историей миссий
+/// ViewModel for mission history management
 class MissionHistoryViewModel: ObservableObject {
     @Published private(set) var missions: [CompletedMission] = []
     
@@ -96,7 +96,7 @@ class MissionHistoryViewModel: ObservableObject {
     
     // MARK: - Public Methods
     
-    /// Добавить миссию в историю
+    /// Add mission to history
     func addMission(
         template: MissionTemplate,
         result: MissionResult,
@@ -119,11 +119,11 @@ class MissionHistoryViewModel: ObservableObject {
             report: result.message
         )
         
-        missions.insert(mission, at: 0) // Добавляем в начало (новые сверху)
+        missions.insert(mission, at: 0) // Add at beginning (newest on top)
         saveMissions()
     }
     
-    /// Получить статистику по всем миссиям
+    /// Get statistics for all missions
     func getStatistics() -> MissionStatistics {
         let total = missions.count
         let successful = missions.filter { $0.status == .success }.count
@@ -144,18 +144,18 @@ class MissionHistoryViewModel: ObservableObject {
         )
     }
     
-    /// Фильтровать миссии по типу
+    /// Filter missions by type
     func missions(ofType type: MissionType?) -> [CompletedMission] {
         guard let type = type else { return missions }
         return missions.filter { $0.type == type }
     }
     
-    /// Фильтровать миссии по периоду
+    /// Filter missions by period
     func missions(inRange range: DateRange) -> [CompletedMission] {
         return missions.filter { range.contains($0.date) }
     }
     
-    /// Удалить все миссии (для отладки)
+    /// Delete all missions (for debugging)
     func clearHistory() {
         missions.removeAll()
         saveMissions()

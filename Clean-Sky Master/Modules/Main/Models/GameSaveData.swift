@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Game Save Data
 
-/// Структура для сохранения всего прогресса игры
+/// Structure for saving all game progress
 struct GameSaveData: Codable {
     let version: Int = 1
     let savedAt: Date
@@ -72,7 +72,7 @@ struct GameSaveData: Codable {
 
 // MARK: - Saved Repair Kit
 
-/// Codable версия RepairKit
+/// Codable version of RepairKit
 struct SavedRepairKit: Codable {
     let id: String
     let typeRawValue: String
@@ -85,7 +85,7 @@ struct SavedRepairKit: Codable {
     func toRepairKit() -> RepairKit? {
         guard let type = RepairKitType(rawValue: typeRawValue) else { return nil }
         var kit = RepairKit(type: type)
-        // Восстанавливаем UUID если возможно
+        // Restore UUID if possible
         if let uuid = UUID(uuidString: id) {
             kit = RepairKit(type: type)
         }

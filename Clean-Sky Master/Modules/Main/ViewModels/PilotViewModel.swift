@@ -10,10 +10,10 @@ import Combine
 
 // MARK: - Pilot View Model
 //
-// АКТИВНЫЙ MVVM VIEW MODEL
-// Использует struct PilotData из Models/Pilot.swift
+// ACTIVE MVVM VIEW MODEL
+// Uses struct PilotData from Models/Pilot.swift
 
-/// ViewModel для управления пилотом
+/// ViewModel for pilot management
 class PilotViewModel: ObservableObject {
     @Published var pilot: PilotData
     
@@ -23,24 +23,24 @@ class PilotViewModel: ObservableObject {
     
     // MARK: - Actions
     
-    /// Добавление опыта
+    /// Add experience
     func addExperience(_ amount: Int) {
         pilot.experience += amount
         checkLevelUp()
     }
     
-    /// Проверка повышения уровня
+    /// Check level up
     private func checkLevelUp() {
         while pilot.experience >= pilot.experienceForNextLevel {
             pilot.experience -= pilot.experienceForNextLevel
             pilot.level += 1
             pilot.skillPoints += 1
-            // Повышаем BR при повышении уровня
+            // Increase BR on level up
             pilot.battleRating += 1
         }
     }
     
-    /// Улучшение навыка боя
+    /// Upgrade combat skill
     func upgradeCombatSkill() -> Bool {
         guard pilot.skillPoints > 0 else { return false }
         pilot.combatSkill += 1
@@ -49,7 +49,7 @@ class PilotViewModel: ObservableObject {
         return true
     }
     
-    /// Улучшение навыка навигации
+    /// Upgrade navigation skill
     func upgradeNavigationSkill() -> Bool {
         guard pilot.skillPoints > 0 else { return false }
         pilot.navigationSkill += 1
@@ -58,7 +58,7 @@ class PilotViewModel: ObservableObject {
         return true
     }
     
-    /// Улучшение навыка эффективности
+    /// Upgrade efficiency skill
     func upgradeEfficiencySkill() -> Bool {
         guard pilot.skillPoints > 0 else { return false }
         pilot.efficiencySkill += 1
@@ -67,8 +67,8 @@ class PilotViewModel: ObservableObject {
         return true
     }
     
-    /// Обновление BR на основе прокачанных навыков
-    /// Каждые 3 очка навыков = +1 BR
+    /// Update BR based on upgraded skills
+    /// Every 3 skill points = +1 BR
     private func updateBattleRatingFromSkills() {
         let totalSkills = pilot.combatSkill + pilot.navigationSkill + pilot.efficiencySkill
         let skillBR = totalSkills / 3
@@ -76,12 +76,12 @@ class PilotViewModel: ObservableObject {
         pilot.battleRating = max(1, levelBR + skillBR)
     }
     
-    /// Повысить BR за выполнение сложной миссии
+    /// Increase BR for completing difficult mission
     func increaseBattleRating(by amount: Int = 1) {
         pilot.battleRating += amount
     }
     
-    /// Изменение имени
+    /// Change name
     func rename(_ newName: String) {
         pilot.name = newName
     }

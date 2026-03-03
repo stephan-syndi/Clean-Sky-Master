@@ -11,58 +11,58 @@ import Combine
 
 // MARK: - Mission View Model
 //
-// АКТИВНЫЙ MVVM VIEW MODEL
+// ACTIVE MVVM VIEW MODEL
 //
-// Управляет доступными миссиями для выполнения:
-// - Генерация доступных миссий на основе Battle Rating
-// - Управление выбранной миссией
-// - Проверка возможности запуска миссии
-// - Фильтрация доступных миссий
+// Manages available missions for execution:
+// - Generation of available missions based on Battle Rating
+// - Management of selected mission
+// - Check if mission can be started
+// - Filtering available missions
 //
-// ИСТОРИЯ МИССИЙ теперь управляется через MissionHistoryViewModel в GameState
+// MISSION HISTORY is now managed through MissionHistoryViewModel in GameState
 //
-// Использует модели данных:
-// - MissionTemplate из MissionTemplates.swift
-// - MissionResult из Mission.swift
+// Uses data models:
+// - MissionTemplate from MissionTemplates.swift
+// - MissionResult from Mission.swift
 
-/// ViewModel для управления доступными миссиями
+/// ViewModel for managing available missions
 class MissionViewModel: ObservableObject {
     
     // MARK: - Published Properties
     
-    /// Доступные миссии для выполнения
+    /// Available missions for execution
     @Published var availableMissions: [MissionTemplate] = []
     
-    /// Текущая выбранная миссия
+    /// Currently selected mission
     @Published var selectedMission: MissionTemplate?
     
-    /// Последний результат выполнения миссии
+    /// Last mission execution result
     @Published var lastResult: MissionResult?
     
-    /// Выбранный индекс решения в миссии с выбором
+    /// Selected choice index in mission with choices
     @Published var selectedChoiceIndex: Int?
     
     // MARK: - Initialization
     
     init() {
-        // MissionViewModel теперь отвечает только за доступные миссии
-        // История миссий управляется через MissionHistoryViewModel в GameState
+        // MissionViewModel now handles only available missions
+        // Mission history is managed through MissionHistoryViewModel in GameState
     }
     
     // MARK: - Mission Generation
     
-    /// Генерирует новые доступные миссии на основе Battle Rating
+    /// Generates new available missions based on Battle Rating
     /// - Parameters:
-    ///   - battleRating: Текущий Battle Rating самолёта
-    ///   - count: Количество миссий для генерации (по умолчанию 3-5)
+    ///   - battleRating: Current aircraft Battle Rating
+    ///   - count: Number of missions to generate (default 3-5)
     func generateMissions(battleRating: Int, count: Int = Int.random(in: 3...5)) {
         availableMissions.removeAll()
         
-        // Определяем диапазон сложности
+        // Define difficulty range
         let minDifficulty = 0.0
         let maxDifficulty = min(3.0, Double(battleRating) / 10.0 + 1.5)
         
-        // Генерируем уникальные миссии
+        // Generate unique missions
         var attempts = 0
         while availableMissions.count < count && attempts < count * 3 {
             let mission = MissionTemplatesLibrary.getRandomMission(
@@ -71,7 +71,7 @@ class MissionViewModel: ObservableObject {
                 battleRating: battleRating
             )
             
-            // Избегаем дубликатов
+            // Avoid duplicates
             if !availableMissions.contains(where: { $0.name == mission.name }) {
                 availableMissions.append(mission)
             }
@@ -80,15 +80,15 @@ class MissionViewModel: ObservableObject {
         }
     }
     
-    /// Обновляет список доступных миссий (удаляет выполненную, добавляет новую при необходимости)
+    /// Updates list of available missions (removes completed, adds new if needed)
     /// - Parameters:
-    ///   - completedMissionName: Название выполненной миссии
-    ///   - battleRating: Battle Rating для генерации новой миссии
+    ///   - completedMissionName: Name of completed mission
+    ///   - battleRating: Battle Rating for generating new mission
     func refreshMissions(completedMissionName: String, battleRating: Int) {
-        // Удаляем выполненную миссию
+        // Remove completed mission
         availableMissions.removeAll { $0.name == completedMissionName }
         
-        // Если миссий стало мало, генерируем новые
+        // If missions are running low, generate new ones
         if availableMissions.count < 3 {
             generateMissions(battleRating: battleRating, count: 5 - availableMissions.count)
         }
@@ -96,21 +96,21 @@ class MissionViewModel: ObservableObject {
     
     // MARK: - Mission Execution
     
-    /// Выполняет миссию через координацию с GameViewModel
+    /// Executes mission through coordination with GameViewModel
     /// - Parameters:
-    ///   - template: Шаблон миссии
-    ///   - choiceIndex: Индекс выбора игрока (если миссия имеет выборы)
-    ///   - gameVM: GameViewModel для доступа к aircraft/pilot/economy
-    /// - Returns: Результат выполнения миссии
+    ///   - template: Mission template
+    ///   - choiceIndex: Player's choice index (if mission has choices)
+    ///   - gameVM: GameViewModel for accessing aircraft/pilot/economy
+    /// - Returns: Mission execution result
     func executeMission(
         template: MissionTemplate,
         choiceIndex: Int? = nil,
         gameVM: GameViewModel
     ) -> MissionResult {
-        // Сохраняем выбор
+        // Save choice
         self.selectedChoiceIndex = choiceIndex
         
-        // Проверка готовности самолёта
+        // Check aircraft readiness
         let readiness = gameVM.aircraft.isReadyForMission()
         guard readiness.ready else {
             let result = MissionResult(
@@ -119,13 +119,13 @@ class MissionViewModel: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: readiness.reason ?? "Миссия невозможна"
+                message: readiness.reason ?? "Mission impossible"
             )
             lastResult = result
             return result
         }
         
-        // Проверка требований миссии
+        // Check mission requirements
         let canStart = MissionTemplatesLibrary.canStartMission(
             template: template,
             battleRating: gameVM.pilot.battleRating,
@@ -138,16 +138,16 @@ class MissionViewModel: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: canStart.reason ?? "Требования не выполнены"
+                message: canStart.reason ?? "Requirements not met"
             )
             lastResult = result
             return result
         }
         
-        // Базовая сложность с модификаторами
+        // Base difficulty with modifiers
         let totalDifficulty = template.baseDifficulty * template.modifier.difficultyModifier
         
-        // Модификатор награды от выбора
+        // Reward multiplier from choice
         var rewardMultiplier = 1.0
         var riskModifier = 0.0
         if let index = choiceIndex, let choices = template.choices {
@@ -155,12 +155,12 @@ class MissionViewModel: ObservableObject {
             riskModifier = choices[index].riskLevel
         }
         
-        // Расход топлива (базовый - 20-40% в зависимости от сложности)
+        // Fuel cost (base - 20-40% depending on difficulty)
         let baseFuelCost = 20.0 + (totalDifficulty * 10.0)
         let fuelCostPercent = baseFuelCost * gameVM.pilot.navigationBonus()
         let fuelUnitsNeeded = Int(ceil(fuelCostPercent))
         
-        // Проверяем наличие топлива
+        // Check fuel availability
         guard gameVM.economy.fuelUnits >= fuelUnitsNeeded else {
             let result = MissionResult(
                 success: false,
@@ -168,17 +168,17 @@ class MissionViewModel: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: "Недостаточно топлива (нужно \(fuelUnitsNeeded) ед.)"
+                message: "Insufficient fuel (need \(fuelUnitsNeeded) units)"
             )
             lastResult = result
             return result
         }
         
-        // Списываем топливо
+        // Deduct fuel
         gameVM.economyVM.useFuel(fuelUnitsNeeded)
         gameVM.aircraftVM.consumeFuel(fuelCostPercent)
         
-        // Шанс успеха
+        // Success chance
         let baseSuccessChance = max(0.3, 1.0 - (totalDifficulty / 5.0))
         let pilotCombatBonus = Double(gameVM.pilot.combatSkill) * 0.02
         let brBonus = Double(gameVM.pilot.battleRating) / 200.0
@@ -187,22 +187,22 @@ class MissionViewModel: ObservableObject {
         
         let success = Double.random(in: 0...1) < finalSuccessChance
         
-        // Провал миссии
+        // Mission failure
         if !success {
             let damage = 15.0 * totalDifficulty
             let _ = gameVM.aircraftVM.takeDamage(damage)
             
-            // Опыт даже за провал (меньше)
+            // Experience even on failure (less)
             let failExperience = Int(30.0 * totalDifficulty)
             
-            // Запоминаем уровень до добавления опыта
+            // Remember level before adding experience
             let oldLevel = gameVM.pilot.level
             let oldSkillPoints = gameVM.pilot.skillPoints
             
-            // Добавляем опыт даже за провал
+            // Add experience even on failure
             gameVM.pilotVM.addExperience(failExperience)
             
-            // Проверяем повышение уровня
+            // Check level up
             let leveledUp = gameVM.pilot.level > oldLevel
             let newLevel = leveledUp ? gameVM.pilot.level : nil
             let skillPointsGained = gameVM.pilot.skillPoints - oldSkillPoints
@@ -213,7 +213,7 @@ class MissionViewModel: ObservableObject {
                 fuelUsed: fuelCostPercent,
                 damageReceived: damage,
                 experienceGained: failExperience,
-                message: "Миссия провалена",
+                message: "Mission failed",
                 leveledUp: leveledUp,
                 newLevel: newLevel,
                 skillPointsGained: skillPointsGained
@@ -223,7 +223,7 @@ class MissionViewModel: ObservableObject {
             return result
         }
         
-        // Успешная миссия - проверка урона в бою
+        // Successful mission - check combat damage
         var damageReceived = 0.0
         if totalDifficulty > 1.0 {
             let evasionSuccess = Double.random(in: 0...1) < gameVM.aircraft.evasionChance
@@ -233,36 +233,36 @@ class MissionViewModel: ObservableObject {
             }
         }
         
-        // Награда
+        // Reward
         let baseReward = Double(template.baseReward) * template.modifier.difficultyModifier * rewardMultiplier
         let cargoBonus = 1.0 + (Double(gameVM.aircraft.cargo) / 500.0)
         let pilotEfficiencyBonus = gameVM.pilot.efficiencyBonus()
         let reward = Int(baseReward * cargoBonus * pilotEfficiencyBonus)
         gameVM.economyVM.addCredits(reward)
         
-        // Шанс получить запчасти (выше для сложных миссий)
+        // Chance to get parts (higher for difficult missions)
         let partsChance = min(0.6, 0.2 + (totalDifficulty * 0.15))
         if Double.random(in: 0...1) < partsChance {
             let partsFound = Int.random(in: 1...Int(max(3, totalDifficulty * 2)))
             gameVM.economyVM.addParts(partsFound)
         }
         
-        // Опыт и повышение уровня
+        // Experience and level up
         let experience = Int(60.0 * totalDifficulty * (1.0 + riskModifier))
         
-        // Запоминаем уровень до добавления опыта
+        // Remember level before adding experience
         let oldLevel = gameVM.pilot.level
         let oldSkillPoints = gameVM.pilot.skillPoints
         
-        // Добавляем опыт
+        // Add experience
         gameVM.pilotVM.addExperience(experience)
         
-        // Проверяем повышение уровня
+        // Check level up
         let leveledUp = gameVM.pilot.level > oldLevel
         let newLevel = leveledUp ? gameVM.pilot.level : nil
         let skillPointsGained = gameVM.pilot.skillPoints - oldSkillPoints
         
-        // Дополнительные skill points за особо сложные миссии (3.0+)
+        // Bonus skill points for especially difficult missions (3.0+)
         var bonusSkillPoints = 0
         if totalDifficulty >= 3.0 {
             bonusSkillPoints = 1
@@ -277,7 +277,7 @@ class MissionViewModel: ObservableObject {
             fuelUsed: fuelCostPercent,
             damageReceived: damageReceived,
             experienceGained: experience,
-            message: "Миссия выполнена успешно!",
+            message: "Mission completed successfully!",
             leveledUp: leveledUp,
             newLevel: newLevel,
             skillPointsGained: totalSkillPointsGained
@@ -289,26 +289,26 @@ class MissionViewModel: ObservableObject {
     
     // MARK: - Mission Selection
     
-    /// Выбирает миссию для выполнения
-    /// - Parameter mission: Шаблон миссии
+    /// Selects mission for execution
+    /// - Parameter mission: Mission template
     func selectMission(_ mission: MissionTemplate) {
         selectedMission = mission
         selectedChoiceIndex = nil
     }
     
-    /// Очищает выбранную миссию
+    /// Clears selected mission
     func clearSelection() {
         selectedMission = nil
         selectedChoiceIndex = nil
         lastResult = nil
     }
     
-    /// Проверяет, может ли миссия быть начата
+    /// Checks if mission can be started
     /// - Parameters:
-    ///   - template: Шаблон миссии
-    ///   - battleRating: Battle Rating самолёта
-    ///   - modules: Установленные модули
-    /// - Returns: Кортеж (можно начать, причина если нельзя)
+    ///   - template: Mission template
+    ///   - battleRating: Aircraft Battle Rating
+    ///   - modules: Installed modules
+    /// - Returns: Tuple (can start, reason if not)
     func canStartMission(
         template: MissionTemplate,
         battleRating: Int,

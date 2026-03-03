@@ -25,7 +25,7 @@ struct UpgradeView: View {
     
     var body: some View {
         ZStack {
-            // Фон
+            // Background
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 0.05, green: 0.1, blue: 0.2),
@@ -37,13 +37,13 @@ struct UpgradeView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Шапка
+                // Header
                 HStack {
                     Button(action: { dismiss() }) {
                         HStack(spacing: 6) {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 16, weight: .semibold))
-                            Text("Назад")
+                            Text("Back")
                                 .font(.system(size: 17, weight: .medium))
                         }
                         .foregroundColor(.white)
@@ -51,13 +51,13 @@ struct UpgradeView: View {
                     
                     Spacer()
                     
-                    Text("ДЕРЕВО АПГРЕЙДОВ")
+                    Text("UPGRADE TREE")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
                     Spacer()
                     
-                    // Баланс очков
+                    // Points balance
                     HStack(spacing: 6) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
@@ -81,7 +81,7 @@ struct UpgradeView: View {
                 
                 ScrollView {
                     VStack(spacing: 30) {
-                        // Дерево апгрейдов
+                        // Upgrade tree
                         ForEach(categories, id: \.title) { category in
                             UpgradeCategorySection(
                                 category: category,
@@ -122,7 +122,7 @@ struct UpgradeView: View {
             if let index = upgrades.firstIndex(where: { $0.id == upgrade.id }) {
                 upgrades[index].isPurchased = true
                 
-                // Разблокировать зависимые апгрейды
+                // Unlock dependent upgrades
                 for i in upgrades.indices {
                     if upgrades[i].requirements.contains(upgrade.name) {
                         upgrades[i].isUnlocked = true
@@ -143,7 +143,7 @@ struct UpgradeCategorySection: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Заголовок категории
+            // Category header
             HStack(spacing: 12) {
                 Image(systemName: category.icon)
                     .font(.system(size: 24))
@@ -155,7 +155,7 @@ struct UpgradeCategorySection: View {
             }
             .padding(.bottom, 4)
             
-            // Карточки апгрейдов с соединительными линиями
+            // Upgrade cards with connecting lines
             VStack(spacing: 0) {
                 ForEach(Array(upgrades.enumerated()), id: \.element.id) { index, upgrade in
                     VStack(spacing: 0) {
@@ -163,7 +163,7 @@ struct UpgradeCategorySection: View {
                             onUpgradeSelect(upgrade)
                         }
                         
-                        // Соединительная линия к следующему апгрейду
+                        // Connection line to next upgrade
                         if index < upgrades.count - 1 {
                             ConnectionLine(isActive: upgrade.isPurchased)
                         }
@@ -243,7 +243,7 @@ struct UpgradeCard: View {
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 16) {
-                // Иконка и статус
+                // Icon and status
                 ZStack {
                     Circle()
                         .fill(iconBackgroundColor)
@@ -260,7 +260,7 @@ struct UpgradeCard: View {
                     }
                 }
                 
-                // Информация
+                // Information
                 VStack(alignment: .leading, spacing: 6) {
                     Text(upgrade.name)
                         .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -271,9 +271,9 @@ struct UpgradeCard: View {
                         .foregroundColor(.gray)
                         .lineLimit(2)
                     
-                    // Эффект
+                    // Effect
                     HStack(spacing: 8) {
-                        Text("ЭФФЕКТ:")
+                        Text("EFFECT:")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(.gray)
                         
@@ -285,7 +285,7 @@ struct UpgradeCard: View {
                 
                 Spacer()
                 
-                // Стоимость и уровень
+                // Cost and level
                 VStack(spacing: 6) {
                     if !upgrade.isPurchased {
                         HStack(spacing: 4) {
@@ -304,7 +304,7 @@ struct UpgradeCard: View {
                         )
                     }
                     
-                    Text("Ур. \(upgrade.level)/\(upgrade.maxLevel)")
+                    Text("Lvl. \(upgrade.level)/\(upgrade.maxLevel)")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(.gray)
                 }
@@ -342,7 +342,7 @@ struct PurchaseConfirmationView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // Иконка
+                // Icon
                 ZStack {
                     Circle()
                         .fill(upgrade.effect.color.opacity(0.2))
@@ -354,7 +354,7 @@ struct PurchaseConfirmationView: View {
                 }
                 .padding(.top, 20)
                 
-                // Информация
+                // Information
                 VStack(spacing: 12) {
                     Text(upgrade.name)
                         .font(.system(size: 24, weight: .bold, design: .rounded))
@@ -366,9 +366,9 @@ struct PurchaseConfirmationView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                     
-                    // Эффект
+                    // Effect
                     HStack(spacing: 8) {
-                        Text("ЭФФЕКТ:")
+                        Text("EFFECT:")
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.gray)
                         
@@ -381,7 +381,7 @@ struct PurchaseConfirmationView: View {
                 
                 Spacer()
                 
-                // Кнопки
+                // Buttons
                 VStack(spacing: 12) {
                     Button(action: {
                         onPurchase(upgrade)
@@ -389,7 +389,7 @@ struct PurchaseConfirmationView: View {
                         HStack {
                             Image(systemName: "star.fill")
                                 .foregroundColor(.yellow)
-                            Text("КУПИТЬ ЗА \(upgrade.cost)")
+                            Text("BUY FOR \(upgrade.cost)")
                                 .font(.system(size: 18, weight: .bold, design: .rounded))
                         }
                         .foregroundColor(.white)
@@ -415,7 +415,7 @@ struct PurchaseConfirmationView: View {
                     .disabled(!canPurchase)
                     
                     Button(action: { dismiss() }) {
-                        Text("Отмена")
+                        Text("Cancel")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity)
@@ -426,7 +426,7 @@ struct PurchaseConfirmationView: View {
                 .padding(.bottom, 20)
                 
                 if !canPurchase {
-                    Text("Недостаточно очков")
+                    Text("Not enough points")
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.red)
                         .padding(.bottom, 10)

@@ -30,13 +30,13 @@ struct UpgradeEffect {
     var displayString: String {
         switch type {
         case .speed:
-            return "+\(Int(value)) км/ч"
+            return "+\(Int(value)) km/h"
         case .fuel:
             return "+\(Int(value))%"
         case .health:
             return "+\(Int(value))%"
         case .capacity:
-            return "+\(Int(value)) л"
+            return "+\(Int(value)) L"
         case .efficiency:
             return "-\(Int(value))%"
         case .armor:
@@ -44,7 +44,7 @@ struct UpgradeEffect {
         case .firepower:
             return "+\(Int(value))"
         case .cargo:
-            return "+\(Int(value)) кг"
+            return "+\(Int(value)) kg"
         }
     }
     
@@ -81,7 +81,7 @@ struct Upgrade: Identifiable, Codable {
     let cost: Int
     let level: Int
     let maxLevel: Int
-    let requirements: [String] // Названия апгрейдов-зависимостей
+    let requirements: [String] // Names of upgrade dependencies
     var isUnlocked: Bool
     var isPurchased: Bool
     
@@ -180,10 +180,10 @@ extension UpgradeEffect: Codable {
 extension Upgrade {
     static func createDefaultUpgrades() -> [Upgrade] {
         return [
-            // ДВИГАТЕЛЬ - Скорость
+            // ENGINE - Speed
             Upgrade(
-                name: "Турбонаддув Mk.I",
-                description: "Увеличивает скорость самолета",
+                name: "Turbocharger Mk.I",
+                description: "Increases aircraft speed",
                 icon: "tornado",
                 effect: UpgradeEffect(type: .speed, value: 50),
                 cost: 300,
@@ -194,34 +194,34 @@ extension Upgrade {
                 isPurchased: false
             ),
             Upgrade(
-                name: "Турбонаддув Mk.II",
-                description: "Значительно увеличивает скорость",
+                name: "Turbocharger Mk.II",
+                description: "Significantly increases speed",
                 icon: "tornado",
                 effect: UpgradeEffect(type: .speed, value: 100),
                 cost: 600,
                 level: 2,
                 maxLevel: 3,
-                requirements: ["Турбонаддув Mk.I"],
+                requirements: ["Turbocharger Mk.I"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             Upgrade(
-                name: "Реактивный двигатель",
-                description: "Максимальная скорость полета",
+                name: "Jet Engine",
+                description: "Maximum flight speed",
                 icon: "flame.fill",
                 effect: UpgradeEffect(type: .speed, value: 200),
                 cost: 1200,
                 level: 3,
                 maxLevel: 3,
-                requirements: ["Турбонаддув Mk.II"],
+                requirements: ["Turbocharger Mk.II"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             
-            // ТОПЛИВНАЯ СИСТЕМА
+            // FUEL SYSTEM
             Upgrade(
-                name: "Расширенный бак",
-                description: "Увеличивает емкость топлива",
+                name: "Extended Tank",
+                description: "Increases fuel capacity",
                 icon: "cylinder.fill",
                 effect: UpgradeEffect(type: .fuel, value: 20),
                 cost: 250,
@@ -232,34 +232,34 @@ extension Upgrade {
                 isPurchased: false
             ),
             Upgrade(
-                name: "Эффективный насос",
-                description: "Снижает расход топлива",
+                name: "Efficient Pump",
+                description: "Reduces fuel consumption",
                 icon: "arrow.down.circle.fill",
                 effect: UpgradeEffect(type: .efficiency, value: 15),
                 cost: 400,
                 level: 2,
                 maxLevel: 3,
-                requirements: ["Расширенный бак"],
+                requirements: ["Extended Tank"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             Upgrade(
-                name: "Криогенное охлаждение",
-                description: "Максимальная эффективность топлива",
+                name: "Cryogenic Cooling",
+                description: "Maximum fuel efficiency",
                 icon: "snowflake",
                 effect: UpgradeEffect(type: .efficiency, value: 30),
                 cost: 800,
                 level: 3,
                 maxLevel: 3,
-                requirements: ["Эффективный насос"],
+                requirements: ["Efficient Pump"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             
-            // КОРПУС - Здоровье
+            // HULL - Health
             Upgrade(
-                name: "Усиленная обшивка",
-                description: "Повышает прочность самолета",
+                name: "Reinforced Plating",
+                description: "Increases aircraft durability",
                 icon: "shield.lefthalf.filled",
                 effect: UpgradeEffect(type: .health, value: 20),
                 cost: 350,
@@ -270,34 +270,34 @@ extension Upgrade {
                 isPurchased: false
             ),
             Upgrade(
-                name: "Титановый каркас",
-                description: "Значительно увеличивает прочность",
+                name: "Titanium Frame",
+                description: "Significantly increases durability",
                 icon: "shield.fill",
                 effect: UpgradeEffect(type: .health, value: 40),
                 cost: 700,
                 level: 2,
                 maxLevel: 3,
-                requirements: ["Усиленная обшивка"],
+                requirements: ["Reinforced Plating"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             Upgrade(
-                name: "Композитная броня",
-                description: "Максимальная защита",
+                name: "Composite Armor",
+                description: "Maximum protection",
                 icon: "shield.checkered",
                 effect: UpgradeEffect(type: .armor, value: 30),
                 cost: 1000,
                 level: 3,
                 maxLevel: 3,
-                requirements: ["Титановый каркас"],
+                requirements: ["Titanium Frame"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             
-            // ВООРУЖЕНИЕ
+            // ARMAMENT
             Upgrade(
-                name: "Улучшенные пушки",
-                description: "Увеличивает огневую мощь",
+                name: "Improved Cannons",
+                description: "Increases firepower",
                 icon: "scope",
                 effect: UpgradeEffect(type: .firepower, value: 15),
                 cost: 400,
@@ -308,22 +308,22 @@ extension Upgrade {
                 isPurchased: false
             ),
             Upgrade(
-                name: "Ракетные установки",
-                description: "Значительно увеличивает урон",
+                name: "Rocket Launchers",
+                description: "Significantly increases damage",
                 icon: "sparkles",
                 effect: UpgradeEffect(type: .firepower, value: 30),
                 cost: 800,
                 level: 2,
                 maxLevel: 3,
-                requirements: ["Улучшенные пушки"],
+                requirements: ["Improved Cannons"],
                 isUnlocked: false,
                 isPurchased: false
             ),
             
-            // ГРУЗОПОДЪЕМНОСТЬ
+            // CARGO CAPACITY
             Upgrade(
-                name: "Увеличенный трюм",
-                description: "Повышает грузоподъёмность",
+                name: "Expanded Cargo Hold",
+                description: "Increases cargo capacity",
                 icon: "shippingbox.fill",
                 effect: UpgradeEffect(type: .cargo, value: 100),
                 cost: 300,
@@ -334,14 +334,14 @@ extension Upgrade {
                 isPurchased: false
             ),
             Upgrade(
-                name: "Модульные контейнеры",
-                description: "Значительно увеличивает вместимость",
+                name: "Modular Containers",
+                description: "Significantly increases capacity",
                 icon: "cube.box.fill",
                 effect: UpgradeEffect(type: .cargo, value: 200),
                 cost: 600,
                 level: 2,
                 maxLevel: 3,
-                requirements: ["Увеличенный трюм"],
+                requirements: ["Expanded Cargo Hold"],
                 isUnlocked: false,
                 isPurchased: false
             )
@@ -351,39 +351,39 @@ extension Upgrade {
     static func createDefaultCategories(for upgrades: [Upgrade]) -> [UpgradeCategory] {
         var categories = [
             UpgradeCategory(
-                title: "ДВИГАТЕЛЬ",
+                title: "ENGINE",
                 icon: "engine.combustion.fill",
                 color: .red
             ),
             UpgradeCategory(
-                title: "ТОПЛИВНАЯ СИСТЕМА",
+                title: "FUEL SYSTEM",
                 icon: "fuelpump.fill",
                 color: .green
             ),
             UpgradeCategory(
-                title: "КОРПУС",
+                title: "HULL",
                 icon: "shield.fill",
                 color: .cyan
             ),
             UpgradeCategory(
-                title: "ВООРУЖЕНИЕ",
+                title: "ARMAMENT",
                 icon: "sparkles",
                 color: .yellow
             ),
             UpgradeCategory(
-                title: "ГРУЗОПОДЪЁМНОСТЬ",
+                title: "CARGO CAPACITY",
                 icon: "shippingbox.fill",
                 color: .indigo
             )
         ]
         
-        // Назначаем апгрейды категориям по индексам
+        // Assign upgrades to categories by indices
         if upgrades.count >= 13 {
-            categories[0].upgradeIds = [upgrades[0].id, upgrades[1].id, upgrades[2].id] // Двигатель
-            categories[1].upgradeIds = [upgrades[3].id, upgrades[4].id, upgrades[5].id] // Топливо
-            categories[2].upgradeIds = [upgrades[6].id, upgrades[7].id, upgrades[8].id] // Корпус
-            categories[3].upgradeIds = [upgrades[9].id, upgrades[10].id] // Вооружение
-            categories[4].upgradeIds = [upgrades[11].id, upgrades[12].id] // Грузоподъёмность
+            categories[0].upgradeIds = [upgrades[0].id, upgrades[1].id, upgrades[2].id] // Engine
+            categories[1].upgradeIds = [upgrades[3].id, upgrades[4].id, upgrades[5].id] // Fuel
+            categories[2].upgradeIds = [upgrades[6].id, upgrades[7].id, upgrades[8].id] // Hull
+            categories[3].upgradeIds = [upgrades[9].id, upgrades[10].id] // Armament
+            categories[4].upgradeIds = [upgrades[11].id, upgrades[12].id] // Cargo Capacity
         }
         
         return categories

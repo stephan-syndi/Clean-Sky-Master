@@ -9,11 +9,11 @@ import SwiftUI
 
 // MARK: - Main Dashboard View
 //
-// Главная панель управления
-// Использует единый источник данных через @EnvironmentObject:
-// - GameState для доступа к economy (кредиты, топливо, запчасти)
-// - Синхронизировано с ShopView и другими View
-// - Все изменения отражаются во всем приложении
+// Main control panel
+// Uses unified data source via @EnvironmentObject:
+// - GameState for access to economy (credits, fuel, parts)
+// - Synchronized with ShopView and other Views
+// - All changes are reflected throughout the application
 
 struct MainDashboardView: View {
     @EnvironmentObject var gameState: GameState
@@ -24,7 +24,7 @@ struct MainDashboardView: View {
     
     var body: some View {
         ZStack {
-            // Фоновый градиент
+            // Background gradient
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 0.05, green: 0.1, blue: 0.2),
@@ -37,10 +37,10 @@ struct MainDashboardView: View {
             
             ScrollView { 
                 VStack(spacing: 25) {
-                    // Заголовок
+                    // Title
                     VStack(spacing: 10) {
                         HStack {
-                            Text("ПРИБОРНАЯ ПАНЕЛЬ")
+                            Text("DASHBOARD")
                                 .font(.system(size: 28, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
                             
@@ -54,35 +54,35 @@ struct MainDashboardView: View {
                         }
                         .padding(.horizontal)
                         
-                        // Баланс и ресурсы
+                        // Balance and resources
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
                                 ResourceBadge(
                                     icon: "dollarsign.circle.fill",
                                     amount: gameState.economy.credits,
                                     color: .yellow,
-                                    label: "Кредиты"
+                                    label: "Credits"
                                 )
                                 
                                 ResourceBadge(
                                     icon: "fuelpump.fill",
                                     amount: gameState.economy.fuelUnits,
                                     color: .green,
-                                    label: "Топливо"
+                                    label: "Fuel"
                                 )
                                 
                                 ResourceBadge(
                                     icon: "gearshape.fill",
                                     amount: gameState.economy.parts,
                                     color: .cyan,
-                                    label: "Запчасти"
+                                    label: "Parts"
                                 )
                                 
                                 ResourceBadge(
                                     icon: "person.fill",
                                     amount: gameState.pilot.level,
                                     color: .blue,
-                                    label: "Уровень"
+                                    label: "Level"
                                 )
                                 
                                 ResourceBadge(
@@ -95,12 +95,12 @@ struct MainDashboardView: View {
                             .padding(.horizontal, 4)
                         }
                         
-                        // Подсказка о бесплатном топливе
+                        // Free fuel refill hint
                         HStack(spacing: 6) {
                             Image(systemName: "clock.fill")
                                 .font(.system(size: 10))
                                 .foregroundColor(.green)
-                            Text("Топливо пополняется каждые 5 минут")
+                            Text("Fuel refills every 5 minutes")
                                 .font(.system(size: 11))
                                 .foregroundColor(.gray)
                         }
@@ -109,11 +109,11 @@ struct MainDashboardView: View {
                     }
                     .padding(.top, 20)
                     
-                    // Основные показатели (сетка 2x2)
+                    // Main metrics (2x2 grid)
                     VStack(spacing: 20) {
                         HStack(spacing: 20) {
                             DashboardMetric(
-                                title: "ТОПЛИВО",
+                                title: "FUEL",
                                 value: String(format: "%.0f%%", gameState.aircraft.fuel),
                                 icon: "fuelpump.fill",
                                 color: gameState.aircraft.fuel > 30 ? .green : .red,
@@ -121,7 +121,7 @@ struct MainDashboardView: View {
                             )
                             
                             DashboardMetric(
-                                title: "ЗДОРОВЬЕ",
+                                title: "HEALTH",
                                 value: String(format: "%.0f%%", gameState.aircraft.health),
                                 icon: "wrench.and.screwdriver.fill",
                                 color: gameState.aircraft.health > 50 ? .cyan : .orange,
@@ -131,7 +131,7 @@ struct MainDashboardView: View {
                         
                         HStack(spacing: 20) {
                             DashboardMetric(
-                                title: "БРОНЯ",
+                                title: "ARMOR",
                                 value: "\(gameState.aircraft.armor)",
                                 icon: "shield.fill",
                                 color: .blue,
@@ -139,7 +139,7 @@ struct MainDashboardView: View {
                             )
                             
                             DashboardMetric(
-                                title: "ОРУЖИЕ",
+                                title: "WEAPONS",
                                 value: "\(gameState.aircraft.firepower)",
                                 icon: "scope",
                                 color: .red,
@@ -149,7 +149,7 @@ struct MainDashboardView: View {
                         
                         HStack(spacing: 20) {
                             DashboardMetric(
-                                title: "СКОРОСТЬ",
+                                title: "SPEED",
                                 value: "\(gameState.aircraft.speed)",
                                 icon: "speedometer",
                                 color: .purple,
@@ -157,7 +157,7 @@ struct MainDashboardView: View {
                             )
                             
                             DashboardMetric(
-                                title: "ГРУЗ",
+                                title: "CARGO",
                                 value: "\(gameState.aircraft.cargo)",
                                 icon: "shippingbox.fill",
                                 color: .orange,
@@ -167,9 +167,9 @@ struct MainDashboardView: View {
                     }
                     .padding(.horizontal)
                     
-                    // Кнопки управления
+                    // Control buttons
                     VStack(spacing: 15) {
-                        Text("УПРАВЛЕНИЕ")
+                        Text("CONTROLS")
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -179,14 +179,14 @@ struct MainDashboardView: View {
                         VStack(spacing: 12) {
                             HStack(spacing: 12) {
                                 ActionButton(
-                                    title: "ЗАПРАВИТЬ",
+                                    title: "REFUEL",
                                     icon: "fuelpump.fill",
                                     color: .blue,
                                     action: { handleRefuel() }
                                 )
                                 
                                 ActionButton(
-                                    title: "РЕМОНТ",
+                                    title: "REPAIR",
                                     icon: "hammer.fill",
                                     color: .orange,
                                     action: { handleRepair() }
@@ -194,7 +194,7 @@ struct MainDashboardView: View {
                             }
                             
                             ActionButton(
-                                title: "АПГРЕЙД",
+                                title: "UPGRADE",
                                 icon: "star.fill",
                                 color: .purple,
                                 action: { handleUpgrade() }
@@ -251,21 +251,21 @@ struct MainDashboardView: View {
     // MARK: - Actions
     
     private func handleRefuel() {
-        // Рассчитываем сколько топлива нужно
+        // Calculate how much fuel is needed
         let fuelNeeded = gameState.economy.calculateRefuelNeeded(
             currentFuel: gameState.aircraft.fuel,
             maxFuel: gameState.aircraft.maxFuel
         )
         
-        // Ограничиваем до доступного количества
+        // Limit to available amount
         let fuelToAdd = min(fuelNeeded, gameState.economy.fuelUnits)
         
         guard fuelToAdd > 0 else {
-            // Показать сообщение о недостатке топлива или что бак полон
+            // Show message about fuel shortage or that tank is full
             return
         }
         
-        // Показываем попап
+        // Show popup
         showRefuelConfirmation = true
     }
     
@@ -283,24 +283,24 @@ struct MainDashboardView: View {
         
         guard damage > 0 else { return }
         
-        // Проверяем есть ли ремкомплекты
+        // Check if repair kits are available
         guard !gameState.economy.repairKits.isEmpty else {
-            // Можно показать сообщение что нет ремкомплектов
+            // Can show message that there are no repair kits
             return
         }
         
-        // Показываем попап подтверждения
+        // Show confirmation popup
         showRepairConfirmation = true
     }
     
     private func performRepair(with kit: RepairKit) {
         withAnimation(.spring(response: 0.5)) {
-            // Используем ремкомплект из инвентаря
+            // Use repair kit from inventory
             if gameState.economy.useRepairKit(kit) {
-                // Восстанавливаем здоровье
+                // Restore health
                 gameState.aircraftVM.repair(amount: kit.type.healthRestore)
                 
-                // Применяем бонусы
+                // Apply bonuses
                 if kit.type.fuelBonus > 0 {
                     gameState.economy.addFuel(kit.type.fuelBonus)
                 }
@@ -343,7 +343,7 @@ struct RefuelConfirmationSheet: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // Иконка
+                // Icon
                 ZStack {
                     Circle()
                         .fill(Color.green.opacity(0.2))
@@ -356,22 +356,22 @@ struct RefuelConfirmationSheet: View {
                 .padding(.top, 20)
                 
                 VStack(spacing: 12) {
-                    Text("ДОЗАПРАВКА")
+                    Text("REFUELING")
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
-                    Text("Подтвердите заправку самолёта")
+                    Text("Confirm aircraft refueling")
                         .font(.system(size: 15))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                 }
                 
-                // Информация о топливе
+                // Fuel information
                 VStack(spacing: 16) {
-                    // Текущее состояние
+                    // Current state
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("ТЕКУЩЕЕ ТОПЛИВО")
+                            Text("CURRENT FUEL")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.gray)
                             Text(String(format: "%.0f%%", fuelPercentage))
@@ -388,7 +388,7 @@ struct RefuelConfirmationSheet: View {
                         Spacer()
                         
                         VStack(alignment: .trailing, spacing: 4) {
-                            Text("ПОСЛЕ ЗАПРАВКИ")
+                            Text("AFTER REFUELING")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.gray)
                             Text(String(format: "%.0f%%", newFuelPercentage))
@@ -400,14 +400,14 @@ struct RefuelConfirmationSheet: View {
                     Divider()
                         .background(Color.white.opacity(0.1))
                     
-                    // Стоимость
+                    // Cost
                     HStack {
                         Image(systemName: "fuelpump.fill")
                             .font(.system(size: 16))
                             .foregroundColor(.green)
                             .frame(width: 30)
                         
-                        Text("Топливо")
+                        Text("Fuel")
                             .font(.system(size: 15))
                             .foregroundColor(.white)
                         
@@ -418,7 +418,7 @@ struct RefuelConfirmationSheet: View {
                                 .font(.system(size: 18, weight: .bold, design: .rounded))
                                 .foregroundColor(.red)
                             
-                            Text("(\(availableFuel) доступно)")
+                            Text("(\(availableFuel) available)")
                                 .font(.system(size: 13))
                                 .foregroundColor(.gray)
                         }
@@ -433,13 +433,13 @@ struct RefuelConfirmationSheet: View {
                 
                 Spacer()
                 
-                // Кнопки
+                // Buttons
                 VStack(spacing: 12) {
                     Button(action: {
                         onConfirm()
                         dismiss()
                     }) {
-                        Text("ПРИНЯТЬ")
+                        Text("CONFIRM")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -460,7 +460,7 @@ struct RefuelConfirmationSheet: View {
                         onCancel()
                         dismiss()
                     }) {
-                        Text("Отмена")
+                        Text("Cancel")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity)
@@ -506,7 +506,7 @@ struct RepairConfirmationSheet: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // Иконка
+                // Icon
                 ZStack {
                     Circle()
                         .fill(Color.orange.opacity(0.2))
@@ -519,20 +519,20 @@ struct RepairConfirmationSheet: View {
                 .padding(.top, 20)
                 
                 VStack(spacing: 12) {
-                    Text("РЕМОНТ")
+                    Text("REPAIR")
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
-                    Text("Выберите ремкомплект для использования")
+                    Text("Select a repair kit to use")
                         .font(.system(size: 15))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                 }
                 
-                // Текущее состояние здоровья
+                // Current health
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("ТЕКУЩЕЕ ЗДОРОВЬЕ")
+                        Text("CURRENT HEALTH")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(.gray)
                         Text(String(format: "%.0f%%", currentHealth))
@@ -550,7 +550,7 @@ struct RepairConfirmationSheet: View {
                         Spacer()
                         
                         VStack(alignment: .trailing, spacing: 4) {
-                            Text("ПОСЛЕ РЕМОНТА")
+                            Text("AFTER REPAIR")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.gray)
                             Text(String(format: "%.0f%%", previewHealth))
@@ -566,11 +566,11 @@ struct RepairConfirmationSheet: View {
                 )
                 .padding(.horizontal)
                 
-                // Список ремкомплектов
+                // Repair kits list
                 ScrollView {
                     VStack(spacing: 12) {
                         if groupedKits.isEmpty {
-                            Text("Нет доступных ремкомплектов")
+                            Text("No repair kits available")
                                 .font(.system(size: 16))
                                 .foregroundColor(.gray)
                                 .padding()
@@ -590,7 +590,7 @@ struct RepairConfirmationSheet: View {
                     .padding(.horizontal)
                 }
                 
-                // Кнопки
+                // Buttons
                 VStack(spacing: 12) {
                     Button(action: {
                         if let kit = selectedKit {
@@ -598,7 +598,7 @@ struct RepairConfirmationSheet: View {
                             dismiss()
                         }
                     }) {
-                        Text(selectedKit != nil ? "ИСПОЛЬЗОВАТЬ" : "ВЫБЕРИТЕ РЕМКОМПЛЕКТ")
+                        Text(selectedKit != nil ? "USE" : "SELECT REPAIR KIT")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -620,7 +620,7 @@ struct RepairConfirmationSheet: View {
                         onCancel()
                         dismiss()
                     }) {
-                        Text("Отмена")
+                        Text("Cancel")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity)
@@ -645,7 +645,7 @@ struct RepairKitRow: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 16) {
-                // Иконка
+                // Icon
                 ZStack {
                     Circle()
                         .fill(isSelected ? Color.orange.opacity(0.3) : Color.white.opacity(0.1))
@@ -656,7 +656,7 @@ struct RepairKitRow: View {
                         .foregroundColor(isSelected ? .orange : .white)
                 }
                 
-                // Информация
+                // Information
                 VStack(alignment: .leading, spacing: 4) {
                     Text(type.rawValue)
                         .font(.system(size: 16, weight: .semibold))
@@ -689,13 +689,13 @@ struct RepairKitRow: View {
                 
                 Spacer()
                 
-                // Количество
+                // Quantity
                 VStack(spacing: 4) {
                     Text("×\(count)")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(isSelected ? .orange : .white)
                     
-                    Text("в наличии")
+                    Text("in stock")
                         .font(.system(size: 11))
                         .foregroundColor(.gray)
                 }
@@ -725,31 +725,31 @@ struct DashboardMetric: View {
     
     var body: some View {
         VStack(spacing: 12) {
-            // Иконка
+            // Icon
             Image(systemName: icon)
                 .font(.system(size: 32))
                 .foregroundColor(color)
             
-            // Значение
+            // Value
             Text(value)
                 .font(.system(size: 36, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
             
-            // Заголовок
+            // Title
             Text(title)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.gray)
             
-            // Прогресс-бар (если есть)
+            // Progress bar (if any)
             if let progress = progress {
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
-                        // Фон прогресс-бара
+                        // Progress bar background
                         RoundedRectangle(cornerRadius: 4)
                             .fill(Color.white.opacity(0.1))
                             .frame(height: 8)
                         
-                        // Прогресс
+                        // Progress
                         RoundedRectangle(cornerRadius: 4)
                             .fill(color)
                             .frame(width: geometry.size.width * progress, height: 8)

@@ -36,7 +36,7 @@ struct MissionLogView: View {
     
     var body: some View {
         ZStack {
-            // Фон
+            // Background
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 0.05, green: 0.1, blue: 0.2),
@@ -48,10 +48,10 @@ struct MissionLogView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Шапка
+                // Header
                 VStack(spacing: 16) {
                     HStack {
-                        Text("ЖУРНАЛ МИССИЙ")
+                        Text("MISSION LOG")
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                         
@@ -65,7 +65,7 @@ struct MissionLogView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: "line.3.horizontal.decrease.circle\(showFilters ? ".fill" : "")")
                                     .font(.system(size: 20))
-                                Text("Фильтры")
+                                Text("Filters")
                                     .font(.system(size: 15, weight: .semibold))
                             }
                             .foregroundColor(showFilters ? .blue : .white)
@@ -78,12 +78,12 @@ struct MissionLogView: View {
                         }
                     }
                     
-                    // Поиск
+                    // Search
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
                         
-                        TextField("Поиск по названию или отчёту...", text: $searchText)
+                        TextField("Search by name or report...", text: $searchText)
                             .foregroundColor(.white)
                             .autocorrectionDisabled()
                         
@@ -100,7 +100,7 @@ struct MissionLogView: View {
                             .fill(Color.white.opacity(0.1))
                     )
                     
-                    // Панель фильтров
+                    // Filters panel
                     if showFilters {
                         FiltersPanel(
                             selectedType: $selectedType,
@@ -114,9 +114,9 @@ struct MissionLogView: View {
                 .padding()
                 .background(Color.black.opacity(0.3))
                 
-                // Счётчик результатов
+                // Results counter
                 HStack {
-                    Text("Найдено миссий: \(filteredMissions.count)")
+                    Text("Missions found: \(filteredMissions.count)")
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.gray)
                     
@@ -124,7 +124,7 @@ struct MissionLogView: View {
                     
                     if selectedType != nil || selectedAircraft != nil || selectedDateRange != .all {
                         Button(action: resetFilters) {
-                            Text("Сбросить фильтры")
+                            Text("Reset filters")
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundColor(.blue)
                         }
@@ -133,7 +133,7 @@ struct MissionLogView: View {
                 .padding(.horizontal)
                 .padding(.vertical, 8)
                 
-                // Список миссий
+                // Mission list
                 if filteredMissions.isEmpty {
                     EmptyStateView()
                 } else {
@@ -169,16 +169,16 @@ struct FiltersPanel: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Тип миссии
+            // Mission type
             VStack(alignment: .leading, spacing: 8) {
-                Text("ТИП МИССИИ")
+                Text("MISSION TYPE")
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.gray)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         FilterChip(
-                            title: "Все",
+                            title: "All",
                             isSelected: selectedType == nil,
                             action: { selectedType = nil }
                         )
@@ -196,16 +196,16 @@ struct FiltersPanel: View {
                 }
             }
             
-            // Самолёт
+            // Aircraft
             VStack(alignment: .leading, spacing: 8) {
-                Text("САМОЛЁТ")
+                Text("AIRCRAFT")
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.gray)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         FilterChip(
-                            title: "Все",
+                            title: "All",
                             isSelected: selectedAircraft == nil,
                             action: { selectedAircraft = nil }
                         )
@@ -222,9 +222,9 @@ struct FiltersPanel: View {
                 }
             }
             
-            // Период
+            // Period
             VStack(alignment: .leading, spacing: 8) {
-                Text("ПЕРИОД")
+                Text("PERIOD")
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.gray)
                 
@@ -284,14 +284,14 @@ struct MissionCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Основная информация
+            // Main information
             Button(action: {
                 withAnimation(.spring(response: 0.3)) {
                     isExpanded.toggle()
                 }
             }) {
                 HStack(spacing: 12) {
-                    // Иконка типа
+                    // Type icon
                     ZStack {
                         Circle()
                             .fill(mission.type.color.opacity(0.2))
@@ -336,22 +336,22 @@ struct MissionCard: View {
                 .padding(16)
             }
             
-            // Развёрнутая информация
+            // Expanded information
             if isExpanded {
                 VStack(alignment: .leading, spacing: 12) {
                     Divider()
                         .background(Color.white.opacity(0.1))
                     
-                    // Статистика
+                    // Statistics
                     HStack(spacing: 20) {
-                        StatItem(icon: "map", label: "Дистанция", value: "\(mission.distance) км")
-                        StatItem(icon: "clock", label: "Время", value: "\(mission.flightTime) мин")
-                        StatItem(icon: "star.fill", label: "Награда", value: "\(mission.reward)")
+                        StatItem(icon: "map", label: "Distance", value: "\(mission.distance) km")
+                        StatItem(icon: "clock", label: "Time", value: "\(mission.flightTime) min")
+                        StatItem(icon: "star.fill", label: "Reward", value: "\(mission.reward)")
                     }
                     
-                    // Отчёт
+                    // Report
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("ОТЧЁТ О МИССИИ")
+                        Text("MISSION REPORT")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(.gray)
                         
@@ -439,11 +439,11 @@ struct EmptyStateView: View {
                 .font(.system(size: 60))
                 .foregroundColor(.gray.opacity(0.5))
             
-            Text("Миссии не найдены")
+            Text("No missions found")
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.white)
             
-            Text("Попробуйте изменить фильтры")
+            Text("Try  changing filters")
                 .font(.system(size: 14))
                 .foregroundColor(.gray)
             

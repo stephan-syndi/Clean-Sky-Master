@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-/// Менеджер случайных событий в игре
+/// Manager for random game events
 class EventManager: ObservableObject {
     @Published var currentEvent: GameEvent?
     @Published var showEvent: Bool = false
@@ -17,14 +17,14 @@ class EventManager: ObservableObject {
     private var eventHistory: [UUID] = []
     private let maxHistorySize = 5
     
-    /// Запускает случайное событие
+    /// Triggers a random event
     func triggerRandomEvent() {
-        // Фильтруем события, которые недавно показывались
+        // Filter events that were recently shown
         let unusedEvents = availableEvents.filter { event in
             !eventHistory.contains(event.id)
         }
         
-        // Если все события были показаны, очищаем историю
+        // If all events were shown, clear history
         let eventsToChooseFrom = unusedEvents.isEmpty ? availableEvents : unusedEvents
         
         guard let event = eventsToChooseFrom.randomElement() else { return }
@@ -32,14 +32,14 @@ class EventManager: ObservableObject {
         currentEvent = event
         showEvent = true
         
-        // Добавляем в историю
+        // Add to history
         eventHistory.append(event.id)
         if eventHistory.count > maxHistorySize {
             eventHistory.removeFirst()
         }
     }
     
-    /// Запускает событие определённого типа
+    /// Triggers an event of specific type
     func triggerEvent(ofType type: EventType) {
         let eventsOfType = availableEvents.filter { $0.type == type }
         guard let event = eventsOfType.randomElement() else { return }
@@ -49,13 +49,13 @@ class EventManager: ObservableObject {
         eventHistory.append(event.id)
     }
     
-    /// Закрывает текущее событие
+    /// Closes the current event
     func dismissEvent() {
         showEvent = false
         currentEvent = nil
     }
     
-    /// Возвращает вероятность появления события (можно использовать для автоматических событий)
+    /// Returns the probability of an event occurring (can be used for automatic events)
     func shouldTriggerRandomEvent(baseProbability: Double = 0.1) -> Bool {
         return Double.random(in: 0...1) < baseProbability
     }
@@ -64,18 +64,18 @@ class EventManager: ObservableObject {
 // MARK: - Event Extensions
 
 extension GameEvent {
-    /// Дополнительные события для разнообразия
+    /// Additional events for variety
     static var additionalEvents: [GameEvent] {
         [
             GameEvent(
                 type: .discovery,
-                title: "ТАЛАНТЛИВЫЙ ПИЛОТ",
-                description: "Ваша репутация привлекла внимание талантливого молодого пилота. Он хочет присоединиться к вашему флоту.",
+                title: "TALENTED PILOT",
+                description: "Your reputation has attracted the attention of a talented young pilot. He wants to join your fleet.",
                 choices: [
                     EventChoice(
-                        text: "Взять пилота в команду",
+                        text: "Hire the pilot",
                         consequence: EventConsequence(
-                            description: "Новый пилот присоединился к команде! Теперь вы можете выполнять больше миссий.",
+                            description: "New pilot has joined the team! Now you can perform more missions.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: -200,
@@ -83,9 +83,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Отказать",
+                        text: "Decline",
                         consequence: EventConsequence(
-                            description: "Возможно, это решение вы ещё пересмотрите.",
+                            description: "Perhaps you'll reconsider this decision later.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: nil,
@@ -98,13 +98,13 @@ extension GameEvent {
             
             GameEvent(
                 type: .warning,
-                title: "ПТИЧЬЯ СТАЯ",
-                description: "Диспетчер предупреждает о большой стае птиц на вашем эшелоне.",
+                title: "BIRD FLOCK",
+                description: "Air traffic control warns of a large flock of birds at your flight level.",
                 choices: [
                     EventChoice(
-                        text: "Изменить высоту",
+                        text: "Change altitude",
                         consequence: EventConsequence(
-                            description: "Маневр выполнен успешно. Стая осталась позади.",
+                            description: "Maneuver executed successfully. The flock is left behind.",
                             fuelChange: -5,
                             healthChange: nil,
                             moneyChange: nil,
@@ -112,9 +112,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Продолжить на текущей высоте",
+                        text: "Continue at current altitude",
                         consequence: EventConsequence(
-                            description: "Рискованное решение! К счастью, столкновения удалось избежать.",
+                            description: "Risky decision! Fortunately, collision was avoided.",
                             fuelChange: nil,
                             healthChange: -10,
                             moneyChange: nil,
@@ -127,11 +127,11 @@ extension GameEvent {
             
             GameEvent(
                 type: .accident,
-                title: "ОТКАЗ РАДИОСВЯЗИ",
-                description: "Внезапно пропала связь с диспетчерской вышкой. Необходимо действовать по визуальным сигналам.",
+                title: "RADIO FAILURE",
+                description: "Communication with the control tower has suddenly been lost. You must proceed using visual signals.",
                 choices: nil,
                 autoConsequence: EventConsequence(
-                    description: "Связь восстановлена через 10 минут. Это было напряжённое время.",
+                    description: "Communication restored after 10 minutes. That was a tense time.",
                     fuelChange: nil,
                     healthChange: -5,
                     moneyChange: nil,
@@ -141,13 +141,13 @@ extension GameEvent {
             
             GameEvent(
                 type: .opportunity,
-                title: "РЕКЛАМНОЕ ПРЕДЛОЖЕНИЕ",
-                description: "Компания хочет разместить рекламу на вашем самолёте. Предлагают неплохую сумму.",
+                title: "ADVERTISING OFFER",
+                description: "A company wants to place advertisements on your aircraft. They're offering a good sum.",
                 choices: [
                     EventChoice(
-                        text: "Принять предложение",
+                        text: "Accept the offer",
                         consequence: EventConsequence(
-                            description: "Контракт подписан! Регулярный доход обеспечен.",
+                            description: "Contract signed! Regular income secured.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: 700,
@@ -155,9 +155,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Отклонить",
+                        text: "Decline",
                         consequence: EventConsequence(
-                            description: "Вы сохранили чистый облик своего самолёта.",
+                            description: "You've maintained the clean appearance of your aircraft.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: nil,
@@ -170,11 +170,11 @@ extension GameEvent {
             
             GameEvent(
                 type: .achievement,
-                title: "БЕЗАВАРИЙНЫЙ СТАЖ",
-                description: "Поздравляем! Вы налетали 1000 часов без единой аварии. Это выдающееся достижение!",
+                title: "ACCIDENT-FREE RECORD",
+                description: "Congratulations! You've flown 1000 hours without a single accident. This is an outstanding achievement!",
                 choices: nil,
                 autoConsequence: EventConsequence(
-                    description: "Получена премия за безопасность полётов!",
+                    description: "Flight safety bonus received!",
                     fuelChange: nil,
                     healthChange: 10,
                     moneyChange: 1500,
@@ -184,7 +184,7 @@ extension GameEvent {
         ]
     }
     
-    /// Все доступные события
+    /// All available events
     static var allEvents: [GameEvent] {
         sampleEvents + additionalEvents
     }

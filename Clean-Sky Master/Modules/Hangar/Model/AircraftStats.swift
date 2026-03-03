@@ -10,19 +10,19 @@ import SwiftUI
 import Combine
 
 // MARK: - Aircraft Stats
-// NOTE: Это legacy версия с классами ObservableObject.
-// Новая MVVM архитектура использует struct модели из Models/ и ViewModels из ViewModels/
+// NOTE: This is a legacy version with ObservableObject classes.
+// New MVVM architecture uses struct models from Models/ and ViewModels from ViewModels/
 
-/// Параметры самолёта
+/// Aircraft parameters
 class AircraftStats: ObservableObject {
-    @Published var fuel: Double // Топливо (0-100)
-    @Published var maxFuel: Double // Максимальная ёмкость
-    @Published var armor: Int // Броня
-    @Published var firepower: Int // Оружие
-    @Published var speed: Int // Скорость
-    @Published var cargo: Int // Грузоподъёмность
-    @Published var health: Double // Здоровье корпуса (0-100)
-    @Published var installedModules: [String] // Установленные модули
+    @Published var fuel: Double // Fuel (0-100)
+    @Published var maxFuel: Double // Maximum capacity
+    @Published var armor: Int // Armor
+    @Published var firepower: Int // Weapons
+    @Published var speed: Int // Speed
+    @Published var cargo: Int // Cargo capacity
+    @Published var health: Double // Hull health (0-100)
+    @Published var installedModules: [String] // Installed modules
     
     init(
         fuel: Double = 75.0,
@@ -46,42 +46,42 @@ class AircraftStats: ObservableObject {
     
     // MARK: - Methods
     
-    /// Расчёт дальности полёта
+    /// Flight range calculation
     func maxRange() -> Double {
         let baseRange = 1000.0
         let fuelCoefficient = fuel / 100.0
-        let cargoModifier = 1.0 - (Double(cargo) / 500.0) // Груз уменьшает дальность
+        let cargoModifier = 1.0 - (Double(cargo) / 500.0) // Cargo reduces range
         return baseRange * fuelCoefficient * cargoModifier
     }
     
-    /// Шанс успеха миссии на основе расстояния
+    /// Mission success chance based on distance
     func successChance(forDistance distance: Double) -> Double {
         let range = maxRange()
         if distance > range * 1.5 {
-            return 0.2 // Очень низкий шанс
+            return 0.2 // Very low chance
         } else if distance > range {
-            return 0.5 // Средний шанс
+            return 0.5 // Medium chance
         } else {
-            return 0.9 // Высокий шанс
+            return 0.9 // High chance
         }
     }
     
-    /// Расход топлива на миссию
+    /// Fuel consumption for mission
     func fuelConsumption(forDistance distance: Double) -> Double {
-        let baseFuel = (distance / 10.0) // Базовый расход
-        let cargoModifier = 1.0 + (Double(cargo) / 200.0) // Груз увеличивает расход
+        let baseFuel = (distance / 10.0) // Base consumption
+        let cargoModifier = 1.0 + (Double(cargo) / 200.0) // Cargo increases consumption
         return baseFuel * cargoModifier
     }
     
-    /// Шанс уклонения в бою
+    /// Evasion chance in battle
     func evasionChance() -> Double {
         let baseEvasion = 0.3
-        let speedBonus = Double(speed) / 2000.0 // Максимум +0.25
-        let cargoMalus = Double(cargo) / 1000.0 // Максимум -0.1
+        let speedBonus = Double(speed) / 2000.0 // Maximum +0.25
+        let cargoMalus = Double(cargo) / 1000.0 // Maximum -0.1
         return min(0.8, max(0.1, baseEvasion + speedBonus - cargoMalus))
     }
     
-    /// Получение повреждений с учётом брони
+    /// Taking damage with armor considered
     func takeDamage(_ rawDamage: Double) -> Double {
         let armorReduction = Double(armor) * 0.5
         let actualDamage = max(1.0, rawDamage - armorReduction)
@@ -89,23 +89,23 @@ class AircraftStats: ObservableObject {
         return actualDamage
     }
     
-    /// Заправка топлива
+    /// Refuel
     func refuel(amount: Double) {
         fuel = min(maxFuel, fuel + amount)
     }
     
-    /// Ремонт
+    /// Repair
     func repair(amount: Double) {
         health = min(100, health + amount)
     }
     
-    /// Проверка готовности к миссии
+    /// Check mission readiness
     func isReadyForMission() -> (ready: Bool, reason: String?) {
         if fuel < 20 {
-            return (false, "Недостаточно топлива")
+            return (false, "Insufficient fuel")
         }
         if health < 30 {
-            return (false, "Самолёт требует ремонта")
+            return (false, "Aircraft requires repair")
         }
         return (true, nil)
     }
@@ -113,26 +113,26 @@ class AircraftStats: ObservableObject {
 
 // MARK: - Pilot (Legacy)
 //
-// ВАЖНО: Это legacy версия класса Pilot для обратной совместимости.
-// Новый код должен использовать struct Pilot из Models/Pilot.swift + PilotViewModel
+// IMPORTANT: This is a legacy version of the Pilot class for backward compatibility.
+// New code should use struct Pilot from Models/Pilot.swift + PilotViewModel
 //
-// TODO: Удалить этот класс после завершения миграции на MVVM
+// TODO: Remove this class after completing MVVM migration
 
-/// Пилот самолёта (LEGACY - используйте Models/Pilot.swift)
+/// Aircraft pilot (LEGACY - use Models/Pilot.swift)
 class PilotLegacy: ObservableObject {
     @Published var name: String
     @Published var level: Int
     @Published var experience: Int
     @Published var skillPoints: Int
-    @Published var battleRating: Int // Battle Rating - показатель мастерства пилота
+    @Published var battleRating: Int // Battle Rating - pilot proficiency indicator
     
-    // Навыки пилота
-    @Published var combatSkill: Int // Боевое мастерство
-    @Published var navigationSkill: Int // Навигация
-    @Published var efficiencySkill: Int // Эффективность
+    // Pilot skills
+    @Published var combatSkill: Int // Combat mastery
+    @Published var navigationSkill: Int // Navigation
+    @Published var efficiencySkill: Int // Efficiency
     
     init(
-        name: String = "Капитан",
+        name: String = "Captain",
         level: Int = 1,
         experience: Int = 0,
         skillPoints: Int = 0,
@@ -153,42 +153,42 @@ class PilotLegacy: ObservableObject {
     
     // MARK: - Methods
     
-    /// Опыт для следующего уровня
+    /// Experience to next level
     func experienceToNextLevel() -> Int {
         return level * 100
     }
     
-    /// Прогресс до следующего уровня
+    /// Progress to next level
     func experienceProgress() -> Double {
         return Double(experience) / Double(experienceToNextLevel())
     }
     
-    /// Добавить опыт
+    /// Add experience
     func addExperience(_ amount: Int) {
         experience += amount
         checkLevelUp()
     }
     
-    /// Проверка повышения уровня
+    /// Check level up
     private func checkLevelUp() {
         while experience >= experienceToNextLevel() {
             experience -= experienceToNextLevel()
             level += 1
             skillPoints += 2
-            // Повышаем BR при повышении уровня
+            // Increase BR on level up
             battleRating += 1
         }
     }
     
-    /// Множитель эффективности
+    /// Effectiveness multiplier
     func effectivenessMultiplier() -> Double {
         let baseMultiplier = 1.0
-        let levelBonus = Double(level - 1) * 0.05 // +5% за уровень
+        let levelBonus = Double(level - 1) * 0.05 // +5% per level
         let skillBonus = Double(combatSkill + navigationSkill + efficiencySkill) * 0.02
         return baseMultiplier + levelBonus + skillBonus
     }
     
-    /// Бонус к критическому успеху
+    /// Critical success bonus
     func criticalChance() -> Double {
         let baseChance = 0.05
         let levelBonus = Double(level) * 0.01
@@ -196,17 +196,17 @@ class PilotLegacy: ObservableObject {
         return min(0.5, baseChance + levelBonus + combatBonus)
     }
     
-    /// Бонус к навигации (уменьшение расхода топлива)
+    /// Navigation bonus (fuel consumption reduction)
     func navigationBonus() -> Double {
-        return 1.0 - (Double(navigationSkill) * 0.03) // До -30% расхода
+        return 1.0 - (Double(navigationSkill) * 0.03) // Up to -30% consumption
     }
     
-    /// Бонус к эффективности (увеличение дохода)
+    /// Efficiency bonus (income increase)
     func efficiencyBonus() -> Double {
-        return 1.0 + (Double(efficiencySkill) * 0.04) // До +40% дохода
+        return 1.0 + (Double(efficiencySkill) * 0.04) // Up to +40% income
     }
     
-    /// Улучшить навык
+    /// Upgrade skill
     func upgradeSkill(_ skill: PilotSkill) -> Bool {
         guard skillPoints > 0 else { return false }
         
@@ -236,8 +236,8 @@ class PilotLegacy: ObservableObject {
 
 // MARK: - Legacy Compatibility
 
-/// Псевдоним для обратной совместимости
-/// TODO: Удалить после миграции всего кода на struct Pilot + PilotViewModel
+/// Alias for backward compatibility
+/// TODO: Remove after migrating all code to struct Pilot + PilotViewModel
 typealias Pilot = PilotLegacy
 
 // MARK: - Pilot Skill
@@ -249,9 +249,9 @@ enum PilotSkill {
     
     var title: String {
         switch self {
-        case .combat: return "Бой"
-        case .navigation: return "Навигация"
-        case .efficiency: return "Эффективность"
+        case .combat: return "Combat"
+        case .navigation: return "Navigation"
+        case .efficiency: return "Efficiency"
         }
     }
     
@@ -265,21 +265,21 @@ enum PilotSkill {
     
     var description: String {
         switch self {
-        case .combat: return "Повышает урон и шанс критического успеха"
-        case .navigation: return "Снижает расход топлива"
-        case .efficiency: return "Увеличивает доход от миссий"
+        case .combat: return "Increases damage and critical success chance"
+        case .navigation: return "Reduces fuel consumption"
+        case .efficiency: return "Increases mission income"
         }
     }
 }
 
 // MARK: - Game State
 
-/// Общее состояние игры
-// MARK: - Game State (Главная модель игры)
+/// Overall game state
+// MARK: - Game State (Main game model)
 //
-// ObservableObject с вложенными ObservableObject (aircraft, pilot, economy)
-// ВАЖНО: Изменения во вложенных объектах автоматически пробрасываются
-// через objectWillChange.send() для синхронизации всех View
+// ObservableObject with nested ObservableObjects (aircraft, pilot, economy)
+// IMPORTANT: Changes in nested objects are automatically propagated
+// through objectWillChange.send() for synchronizing all Views
 
 class GameState: ObservableObject {
     @Published var aircraftVM: AircraftViewModel
@@ -288,16 +288,16 @@ class GameState: ObservableObject {
     @Published var altitude: Double
     @Published var missionHistory: MissionHistoryViewModel
     
-    // Сохраняем подписки для отслеживания изменений вложенных объектов
+    // Save subscriptions for tracking nested object changes
     private var cancellables = Set<AnyCancellable>()
     
-    // Устаревшее поле для обратной совместимости
+    // Deprecated field for backward compatibility
     var money: Int {
         get { economy.credits }
         set { economy.credits = newValue }
     }
     
-    // Proxy для доступа к aircraft через ViewModel
+    // Proxy for aircraft access through ViewModel
     var aircraft: Aircraft {
         get { aircraftVM.aircraft }
         set { aircraftVM.aircraft = newValue }
@@ -316,48 +316,48 @@ class GameState: ObservableObject {
         self.altitude = altitude
         self.missionHistory = missionHistory
         
-        // Подписываемся на изменения вложенных ObservableObject
-        // Когда они меняются, GameState тоже публикует изменение
+        // Subscribe to nested ObservableObject changes
+        // When they change, GameState also publishes changes
         aircraftVM.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
-            self?.saveGame() // Автосохранение при изменении самолета
+            self?.saveGame() // Auto-save on aircraft change
         }.store(in: &cancellables)
         
         pilot.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
-            self?.saveGame() // Автосохранение при изменении пилота
+            self?.saveGame() // Auto-save on pilot change
         }.store(in: &cancellables)
         
         economy.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
-            self?.saveGame() // Автосохранение при изменении экономики
+            self?.saveGame() // Auto-save on economy change
         }.store(in: &cancellables)
         
         missionHistory.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }.store(in: &cancellables)
         
-        // Загружаем сохраненный прогресс
+        // Load saved progress
         _ = loadGame()
     }
     
     // MARK: - Mission Methods
     
-    /// Рассчитать итоговый доход от миссии
+    /// Calculate final mission reward
     func calculateMissionReward(baseReward: Int) -> Int {
         let cargoBonus = 1.0 + (Double(aircraft.cargo) / 500.0)
         let pilotBonus = pilot.efficiencyBonus()
         return Int(Double(baseReward) * cargoBonus * pilotBonus)
     }
     
-    /// Рассчитать расход топлива на миссию
+    /// Calculate fuel cost for mission
     func calculateFuelCost(distance: Double) -> Double {
         let baseCost = aircraft.fuelConsumption(forDistance: distance)
         let pilotReduction = pilot.navigationBonus()
         return baseCost * pilotReduction
     }
     
-    /// Рассчитать урон в бою
+    /// Calculate damage in combat
     func calculateDamage(multiplier: Double = 1.0) -> Double {
         let baseDamage = Double(aircraft.firepower) * 10.0
         let pilotMultiplier = pilot.effectivenessMultiplier()
@@ -367,9 +367,9 @@ class GameState: ObservableObject {
         return baseDamage * pilotMultiplier * multiplier * (isCritical ? 2.0 : 1.0)
     }
     
-    /// Выполнить миссию (упрощённая логика)
+    /// Execute mission (simplified logic)
     func executeMission(distance: Double, baseReward: Int, difficulty: Double = 1.0) -> MissionResult {
-        // Проверка готовности
+        // Readiness check
         let readiness = aircraftVM.isReadyForMission()
         guard readiness.ready else {
             return MissionResult(
@@ -378,17 +378,17 @@ class GameState: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: readiness.reason ?? "Миссия невозможна"
+                message: readiness.reason ?? "Mission impossible"
             )
         }
         
-        // Расход топлива (в процентах)
+        // Fuel cost (in percent)
         let fuelCostPercent = calculateFuelCost(distance: distance)
         
-        // Конвертируем в единицы топлива (1% = 1 единица)
+        // Convert to fuel units (1% = 1 unit)
         let fuelUnitsNeeded = Int(ceil(fuelCostPercent))
         
-        // Проверяем наличие топлива в экономике
+        // Check fuel availability in economy
         guard economy.fuelUnits >= fuelUnitsNeeded else {
             return MissionResult(
                 success: false,
@@ -396,15 +396,15 @@ class GameState: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: "Недостаточно топлива (нужно \(fuelUnitsNeeded) ед.)"
+                message: "Insufficient fuel (need \(fuelUnitsNeeded) units)"
             )
         }
         
-        // Списываем топливо
+        // Deduct fuel
         _ = economy.useFuel(fuelUnitsNeeded)
         aircraftVM.consumeFuel(fuelCostPercent)
         
-        // Шанс успеха
+        // Success chance
         let successChance = aircraft.successChance(forDistance: distance)
         let success = Double.random(in: 0...1) < successChance
         
@@ -417,11 +417,11 @@ class GameState: ObservableObject {
                 fuelUsed: fuelCostPercent,
                 damageReceived: actualDamage,
                 experienceGained: 20,
-                message: "Миссия провалена"
+                message: "Mission failed"
             )
         }
         
-        // Бой (если есть)
+        // Combat (if any)
         var damageReceived = 0.0
         if difficulty > 1.0 {
             let evasionSuccess = Double.random(in: 0...1) < aircraft.evasionChance
@@ -431,17 +431,17 @@ class GameState: ObservableObject {
             }
         }
         
-        // Награда в кредитах
+        // Reward in credits
         let reward = calculateMissionReward(baseReward: baseReward)
         economy.addCredits(reward)
         
-        // Шанс получить запчасти
+        // Chance to get parts
         if Double.random(in: 0...1) < 0.3 {
             let partsFound = Int.random(in: 1...3)
             economy.addParts(partsFound)
         }
         
-        // Опыт
+        // Experience
         let experience = Int(50.0 * difficulty)
         pilot.addExperience(experience)
         
@@ -451,13 +451,13 @@ class GameState: ObservableObject {
             fuelUsed: fuelCostPercent,
             damageReceived: damageReceived,
             experienceGained: experience,
-            message: "Миссия выполнена успешно!"
+            message: "Mission completed successfully!"
         )
     }
     
-    /// Выполнить миссию на основе шаблона
+    /// Execute mission based on template
     func executeMissionFromTemplate(template: MissionTemplate, choiceIndex: Int? = nil) -> MissionResult {
-        // Проверка готовности
+        // Readiness check
         let readiness = aircraftVM.isReadyForMission()
         guard readiness.ready else {
             return MissionResult(
@@ -466,11 +466,11 @@ class GameState: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: readiness.reason ?? "Миссия невозможна"
+                message: readiness.reason ?? "Mission impossible"
             )
         }
         
-        // Проверка требований миссии
+        // Check mission requirements
         let canStart = MissionTemplatesLibrary.canStartMission(
             template: template,
             battleRating: pilot.battleRating,
@@ -483,14 +483,14 @@ class GameState: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: canStart.reason ?? "Требования не выполнены"
+                message: canStart.reason ?? "Requirements not met"
             )
         }
         
-        // Базовая сложность с модификаторами
+        // Base difficulty with modifiers
         let totalDifficulty = template.baseDifficulty * template.modifier.difficultyModifier
         
-        // Модификатор награды от выбора
+        // Reward modifier from choice
         var rewardMultiplier = 1.0
         var riskModifier = 0.0
         if let index = choiceIndex, let choices = template.choices {
@@ -498,12 +498,12 @@ class GameState: ObservableObject {
             riskModifier = choices[index].riskLevel
         }
         
-        // Расход топлива (базовый - 20-40% в зависимости от сложности)
+        // Fuel cost (base - 20-40% depending on difficulty)
         let baseFuelCost = 20.0 + (totalDifficulty * 10.0)
         let fuelCostPercent = baseFuelCost * pilot.navigationBonus()
         let fuelUnitsNeeded = Int(ceil(fuelCostPercent))
         
-        // Проверяем наличие топлива
+        // Check fuel availability
         guard economy.fuelUnits >= fuelUnitsNeeded else {
             return MissionResult(
                 success: false,
@@ -511,15 +511,15 @@ class GameState: ObservableObject {
                 fuelUsed: 0,
                 damageReceived: 0,
                 experienceGained: 0,
-                message: "Недостаточно топлива (нужно \(fuelUnitsNeeded) ед.)"
+                message: "Insufficient fuel (need \(fuelUnitsNeeded) units)"
             )
         }
         
-        // Списываем топливо
+        // Deduct fuel
         _ = economy.useFuel(fuelUnitsNeeded)
         aircraftVM.consumeFuel(fuelCostPercent)
         
-        // Шанс успеха
+        // Success chance
         let baseSuccessChance = max(0.3, 1.0 - (totalDifficulty / 5.0))
         let pilotCombatBonus = Double(pilot.combatSkill) * 0.02
         let brBonus = Double(pilot.battleRating) / 200.0
@@ -532,35 +532,35 @@ class GameState: ObservableObject {
             let damage = 15.0 * totalDifficulty
             let actualDamage = aircraftVM.takeDamage(damage)
             
-            // Опыт даже за провал (меньше)
+            // Experience even for failure (less)
             let failExperience = Int(30.0 * totalDifficulty)
             
-            // Запоминаем уровень до добавления опыта
+            // Remember level before adding experience
             let oldLevel = pilot.level
             let oldSkillPoints = pilot.skillPoints
             
-            // Добавляем опыт даже за провал
+            // Add experience even for failure
             pilot.addExperience(failExperience)
             
-            // Проверяем повышение уровня
+            // Check level up
             let leveledUp = pilot.level > oldLevel
             let newLevel = leveledUp ? pilot.level : nil
             let skillPointsGained = pilot.skillPoints - oldSkillPoints
             
-            // Создаём результат миссии
+            // Create mission result
             let result = MissionResult(
                 success: false,
                 reward: 0,
                 fuelUsed: fuelCostPercent,
                 damageReceived: damage,
                 experienceGained: failExperience,
-                message: "Миссия провалена",
+                message: "Mission failed",
                 leveledUp: leveledUp,
                 newLevel: newLevel,
                 skillPointsGained: skillPointsGained
             )
             
-            // Сохраняем провал в историю
+            // Save failure to history
             let distance = Int(100.0 * totalDifficulty)
             let flightTime = Int(60.0 * totalDifficulty)
             missionHistory.addMission(
@@ -573,7 +573,7 @@ class GameState: ObservableObject {
             return result
         }
         
-        // Бой (получение урона)
+        // Combat (taking damage)
         var damageReceived = 0.0
         if totalDifficulty > 1.0 {
             let evasionSuccess = Double.random(in: 0...1) < aircraft.evasionChance
@@ -583,36 +583,36 @@ class GameState: ObservableObject {
             }
         }
         
-        // Награда
+        // Reward
         let baseReward = Double(template.baseReward) * template.modifier.difficultyModifier * rewardMultiplier
         let cargoBonus = 1.0 + (Double(aircraft.cargo) / 500.0)
         let pilotEfficiencyBonus = pilot.efficiencyBonus()
         let reward = Int(baseReward * cargoBonus * pilotEfficiencyBonus)
         economy.addCredits(reward)
         
-        // Шанс получить запчасти (выше для сложных миссий)
+        // Chance to get parts (higher for difficult missions)
         let partsChance = min(0.6, 0.2 + (totalDifficulty * 0.15))
         if Double.random(in: 0...1) < partsChance {
             let partsFound = Int.random(in: 1...Int(max(3, totalDifficulty * 2)))
             economy.addParts(partsFound)
         }
         
-        // Опыт и повышение уровня
+        // Experience and level up
         let experience = Int(60.0 * totalDifficulty * (1.0 + riskModifier))
         
-        // Запоминаем уровень до добавления опыта
+        // Remember level before adding experience
         let oldLevel = pilot.level
         let oldSkillPoints = pilot.skillPoints
         
-        // Добавляем опыт
+        // Add experience
         pilot.addExperience(experience)
         
-        // Проверяем повышение уровня
+        // Check level up
         let leveledUp = pilot.level > oldLevel
         let newLevel = leveledUp ? pilot.level : nil
         let skillPointsGained = pilot.skillPoints - oldSkillPoints
         
-        // Дополнительные skill points за особо сложные миссии (3.0+)
+        // Bonus skill points for especially difficult missions (3.0+)
         var bonusSkillPoints = 0
         if totalDifficulty >= 3.0 {
             bonusSkillPoints = 1
@@ -621,22 +621,22 @@ class GameState: ObservableObject {
         
         let totalSkillPointsGained = skillPointsGained + bonusSkillPoints
         
-        // Создаём результат миссии
+        // Create mission result
         let result = MissionResult(
             success: true,
             reward: reward,
             fuelUsed: fuelCostPercent,
             damageReceived: damageReceived,
             experienceGained: experience,
-            message: "Миссия выполнена успешно!",
+            message: "Mission completed successfully!",
             leveledUp: leveledUp,
             newLevel: newLevel,
             skillPointsGained: totalSkillPointsGained
         )
         
-        // Сохраняем в историю
-        let distance = Int(100.0 * totalDifficulty) // Псевдо-дистанция на основе сложности
-        let flightTime = Int(60.0 * totalDifficulty) // Псевдо-время на основе сложности
+        // Save to history
+        let distance = Int(100.0 * totalDifficulty) // Pseudo-distance based on difficulty
+        let flightTime = Int(60.0 * totalDifficulty) // Pseudo-time based on difficulty
         missionHistory.addMission(
             template: template,
             result: result,
@@ -651,7 +651,7 @@ class GameState: ObservableObject {
     
     private let saveKey = "game_save_data"
     
-    /// Сохранить прогресс игры
+    /// Save game progress
     func saveGame() {
         let saveData = GameSaveData(
             aircraft: aircraftVM.aircraft,
@@ -662,24 +662,24 @@ class GameState: ObservableObject {
         
         if let encoded = try? JSONEncoder().encode(saveData) {
             UserDefaults.standard.set(encoded, forKey: saveKey)
-            print("✅ Игра сохранена: \(saveData.savedAt)")
+            print("✅ Game saved: \(saveData.savedAt)")
         } else {
-            print("❌ Ошибка сохранения игры")
+            print("❌ Error saving game")
         }
     }
     
-    /// Загрузить прогресс игры
+    /// Load game progress
     func loadGame() -> Bool {
         guard let data = UserDefaults.standard.data(forKey: saveKey),
               let saveData = try? JSONDecoder().decode(GameSaveData.self, from: data) else {
-            print("⚠️ Сохранение не найдено, начинается новая игра")
+            print("⚠️ Save not found, starting new game")
             return false
         }
         
-        // Загружаем Aircraft
+        // Load Aircraft
         aircraftVM.aircraft = saveData.aircraft
         
-        // Загружаем Pilot
+        // Load Pilot
         pilot.name = saveData.pilotName
         pilot.level = saveData.pilotLevel
         pilot.experience = saveData.pilotExperience
@@ -689,39 +689,39 @@ class GameState: ObservableObject {
         pilot.navigationSkill = saveData.pilotNavigationSkill
         pilot.efficiencySkill = saveData.pilotEfficiencySkill
         
-        // Загружаем Economy
+        // Load Economy
         economy.credits = saveData.credits
         economy.fuelUnits = saveData.fuelUnits
         economy.parts = saveData.parts
         economy.repairKits = saveData.repairKits.compactMap { $0.toRepairKit() }
         economy.setLastFuelRefill(saveData.lastFuelRefill)
         
-        // Загружаем Altitude
+        // Load Altitude
         altitude = saveData.altitude
         
-        print("✅ Игра загружена: сохранение от \(saveData.savedAt)")
+        print("✅ Game loaded: save from \(saveData.savedAt)")
         return true
     }
     
-    /// Удалить сохранение (для отладки)
+    /// Delete save (for debugging)
     func deleteSave() {
         UserDefaults.standard.removeObject(forKey: saveKey)
-        print("🗑️ Сохранение удалено")
+        print("🗑️ Save deleted")
     }
 }
 
 // MARK: - MVVM Compatibility Type Aliases
 
-/// Позволяет использовать новые MVVM-имена с существующими классами
-/// Облегчает постепенный рефакторинг кода
+/// Allows using new MVVM names with existing classes
+/// Facilitates gradual code refactoring
 
-// Новое имя для AircraftStats (уже ObservableObject класс)
-// typealias AircraftViewModel = AircraftStats (закомментировано - избегаем конфликта имён)
+// New name for AircraftStats (already an ObservableObject class)
+// typealias AircraftViewModel = AircraftStats (commented out - avoiding name conflicts)
 
-// Новое имя для GameState (уже ObservableObject класс)
-// typealias GameViewModel = GameState (закомментировано - избегаем конфликта имён)
+// New name for GameState (already an ObservableObject class)
+// typealias GameViewModel = GameState (commented out - avoiding name conflicts)
 
-// Примечание: Файлы в Models/ и ViewModels/ содержат чистые структуры данных
-// которые будут использоваться в будущих рефакторингах.
-// На данный момент используется монолитный подход в AircraftStats.swift
+// Note: Files in Models/ and ViewModels/ contain pure data structures
+// that will be used in future refactorings.
+// Currently using a monolithic approach in AircraftStats.swift
 

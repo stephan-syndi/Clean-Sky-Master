@@ -1,0 +1,6 @@
+framework module Pods_Clean_Sky_Master {
+  umbrella header "Pods-Clean-Sky Master-umbrella.h"
+
+  export *
+  module * { export * }
+}

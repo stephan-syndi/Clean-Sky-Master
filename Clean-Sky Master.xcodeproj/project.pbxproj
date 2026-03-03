@@ -6,14 +6,71 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		416982C62F571E100022A200 /* notifications.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 416982BF2F571E100022A200 /* notifications.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A105F0EE053C63E8C7F62BCD /* Pods_notifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD52D0110CE5F0D863CAD554 /* Pods_notifications.framework */; };
+		BCEA769490805E71D92644B4 /* Pods_Clean_Sky_Master.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C1EB320964DA9794CFDEA /* Pods_Clean_Sky_Master.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		416982C42F571E100022A200 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4139604E2F518C7C00864FA9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 416982BE2F571E100022A200;
+			remoteInfo = notifications;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		416982C72F571E100022A200 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				416982C62F571E100022A200 /* notifications.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1146729313803D01649AD8BB /* Pods-notifications.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notifications.debug.xcconfig"; path = "Target Support Files/Pods-notifications/Pods-notifications.debug.xcconfig"; sourceTree = "<group>"; };
+		363217A17DBB880CC635C3E1 /* Pods-Clean-Sky Master.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clean-Sky Master.debug.xcconfig"; path = "Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master.debug.xcconfig"; sourceTree = "<group>"; };
 		413960562F518C7C00864FA9 /* Clean-Sky Master.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clean-Sky Master.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		416982BF2F571E100022A200 /* notifications.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = notifications.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		525C1EB320964DA9794CFDEA /* Pods_Clean_Sky_Master.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clean_Sky_Master.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF7F8A41D03C44972FD97DD4 /* Pods-notifications.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notifications.release.xcconfig"; path = "Target Support Files/Pods-notifications/Pods-notifications.release.xcconfig"; sourceTree = "<group>"; };
+		C24171941652D954B57070A8 /* Pods-Clean-Sky Master.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clean-Sky Master.release.xcconfig"; path = "Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master.release.xcconfig"; sourceTree = "<group>"; };
+		FD52D0110CE5F0D863CAD554 /* Pods_notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		416982CA2F571E100022A200 /* Exceptions for "notifications" folder in "notifications" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 416982BE2F571E100022A200 /* notifications */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		413960582F518C7C00864FA9 /* Clean-Sky Master */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "Clean-Sky Master";
+			sourceTree = "<group>";
+		};
+		416982C02F571E100022A200 /* notifications */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				416982CA2F571E100022A200 /* Exceptions for "notifications" folder in "notifications" target */,
+			);
+			path = notifications;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +80,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCEA769490805E71D92644B4 /* Pods_Clean_Sky_Master.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		416982BC2F571E100022A200 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A105F0EE053C63E8C7F62BCD /* Pods_notifications.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,7 +99,10 @@
 			isa = PBXGroup;
 			children = (
 				413960582F518C7C00864FA9 /* Clean-Sky Master */,
+				416982C02F571E100022A200 /* notifications */,
 				413960572F518C7C00864FA9 /* Products */,
+				D10D4383D81F63E9F98FAF7A /* Pods */,
+				998F1D90AD253EA8A7750958 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +110,30 @@
 			isa = PBXGroup;
 			children = (
 				413960562F518C7C00864FA9 /* Clean-Sky Master.app */,
+				416982BF2F571E100022A200 /* notifications.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		998F1D90AD253EA8A7750958 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				525C1EB320964DA9794CFDEA /* Pods_Clean_Sky_Master.framework */,
+				FD52D0110CE5F0D863CAD554 /* Pods_notifications.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D10D4383D81F63E9F98FAF7A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				363217A17DBB880CC635C3E1 /* Pods-Clean-Sky Master.debug.xcconfig */,
+				C24171941652D954B57070A8 /* Pods-Clean-Sky Master.release.xcconfig */,
+				1146729313803D01649AD8BB /* Pods-notifications.debug.xcconfig */,
+				AF7F8A41D03C44972FD97DD4 /* Pods-notifications.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -52,23 +143,46 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 413960612F518C7E00864FA9 /* Build configuration list for PBXNativeTarget "Clean-Sky Master" */;
 			buildPhases = (
+				A92243E84FAEBF3DD47BD5B7 /* [CP] Check Pods Manifest.lock */,
 				413960522F518C7C00864FA9 /* Sources */,
 				413960532F518C7C00864FA9 /* Frameworks */,
 				413960542F518C7C00864FA9 /* Resources */,
+				416982C72F571E100022A200 /* Embed Foundation Extensions */,
+				87750E20D6E0D99174ECF3C0 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				416982C52F571E100022A200 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				413960582F518C7C00864FA9 /* Clean-Sky Master */,
+			);
+			name = "Clean-Sky Master";
+			productName = "Clean-Sky Master";
+			productReference = 413960562F518C7C00864FA9 /* Clean-Sky Master.app */;
+			productType = "com.apple.product-type.application";
+		};
+		416982BE2F571E100022A200 /* notifications */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 416982CB2F571E100022A200 /* Build configuration list for PBXNativeTarget "notifications" */;
+			buildPhases = (
+				DC4CB9FB1CD5F09434E3F4D2 /* [CP] Check Pods Manifest.lock */,
+				416982BB2F571E100022A200 /* Sources */,
+				416982BC2F571E100022A200 /* Frameworks */,
+				416982BD2F571E100022A200 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				413960582F518C7C00864FA9 /* Clean-Sky Master */,
+				416982C02F571E100022A200 /* notifications */,
 			);
-			name = "Clean-Sky Master";
-			packageProductDependencies = (
-			);
-			productName = "Clean-Sky Master";
-			productReference = 413960562F518C7C00864FA9 /* Clean-Sky Master.app */;
-			productType = "com.apple.product-type.application";
+			name = notifications;
+			productName = notifications;
+			productReference = 416982BF2F571E100022A200 /* notifications.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +195,9 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					413960552F518C7C00864FA9 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					416982BE2F571E100022A200 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
@@ -100,6 +217,7 @@
 			projectRoot = "";
 			targets = (
 				413960552F518C7C00864FA9 /* Clean-Sky Master */,
+				416982BE2F571E100022A200 /* notifications */,
 			);
 		};
 /* End PBXProject section */
@@ -112,7 +230,78 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		416982BD2F571E100022A200 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		87750E20D6E0D99174ECF3C0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A92243E84FAEBF3DD47BD5B7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Clean-Sky Master-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DC4CB9FB1CD5F09434E3F4D2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-notifications-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		413960522F518C7C00864FA9 /* Sources */ = {
@@ -122,7 +311,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		416982BB2F571E100022A200 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		416982C52F571E100022A200 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 416982BE2F571E100022A200 /* notifications */;
+			targetProxy = 416982C42F571E100022A200 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4139605F2F518C7E00864FA9 /* Debug */ = {
@@ -246,63 +450,147 @@
 		};
 		413960622F518C7E00864FA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 363217A17DBB880CC635C3E1 /* Pods-Clean-Sky Master.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Clean-Sky Master/Clean-Sky Master.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "skyspace.Clean-Sky-Master";
+				PRODUCT_BUNDLE_IDENTIFIER = com.skyspace.cleanskymaster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		413960632F518C7E00864FA9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C24171941652D954B57070A8 /* Pods-Clean-Sky Master.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Clean-Sky Master/Clean-Sky Master.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "skyspace.Clean-Sky-Master";
+				PRODUCT_BUNDLE_IDENTIFIER = com.skyspace.cleanskymaster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		416982C82F571E100022A200 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1146729313803D01649AD8BB /* Pods-notifications.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = notifications/notifications.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = notifications/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = notifications;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skyspace.cleanskymaster.notifications;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		416982C92F571E100022A200 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF7F8A41D03C44972FD97DD4 /* Pods-notifications.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = notifications/notifications.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = notifications/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = notifications;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skyspace.cleanskymaster.notifications;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -323,6 +611,15 @@
 			buildConfigurations = (
 				413960622F518C7E00864FA9 /* Debug */,
 				413960632F518C7E00864FA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		416982CB2F571E100022A200 /* Build configuration list for PBXNativeTarget "notifications" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				416982C82F571E100022A200 /* Debug */,
+				416982C92F571E100022A200 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

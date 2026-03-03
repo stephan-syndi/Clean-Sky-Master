@@ -45,10 +45,10 @@ struct MissionDetailsSheet: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Прокручиваемый контент
+                // Scrollable content
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Иконка
+                        // Icon
                         ZStack {
                             Circle()
                                 .fill(template.category.color.opacity(0.2))
@@ -72,10 +72,10 @@ struct MissionDetailsSheet: View {
                                 .padding(.horizontal)
                         }
                         
-                        // Выбор игрока
+                        // Player's choice
                         if let index = choiceIndex, let choices = template.choices {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Ваш выбор:")
+                                Text("Your choice:")
                                     .font(.system(size: 14))
                                     .foregroundColor(.gray)
                                 Text(choices[index].text)
@@ -91,11 +91,11 @@ struct MissionDetailsSheet: View {
                             .padding(.horizontal)
                         }
                         
-                        // Статистика миссии
+                        // Mission stats
                         VStack(spacing: 12) {
                             MissionDetailRow(
                                 icon: "chart.bar.fill",
-                                title: "Сложность",
+                                title: "Difficulty",
                                 value: String(format: "×%.1f", template.baseDifficulty * template.modifier.difficultyModifier),
                                 valueColor: template.baseDifficulty > 2.0 ? .red : template.baseDifficulty > 1.5 ? .orange : .green
                             )
@@ -103,33 +103,33 @@ struct MissionDetailsSheet: View {
                             if template.minBattleRating > 0 {
                                 MissionDetailRow(
                                     icon: "shield.fill",
-                                    title: "Требуется BR",
+                                    title: "Required BR",
                                     value: "\(template.minBattleRating)",
                                     valueColor: gameState.pilot.battleRating >= template.minBattleRating ? .green : .red
                                 )
                             }
                             
-                            // Добавляем отладочную информацию о самолёте
+                            // Add aircraft debug info
                             Divider()
                                 .background(Color.white.opacity(0.1))
                             
                             MissionDetailRow(
                                 icon: "fuelpump.fill",
-                                title: "Топливо",
+                                title: "Fuel",
                                 value: "\(Int(gameState.aircraft.fuel))%",
                                 valueColor: gameState.aircraft.fuel >= 20 ? .green : .red
                             )
                             
                             MissionDetailRow(
                                 icon: "heart.fill",
-                                title: "Прочность",
+                                title: "Durability",
                                 value: "\(Int(gameState.aircraft.health))%",
                                 valueColor: gameState.aircraft.health >= 30 ? .green : .red
                             )
                             
                             MissionDetailRow(
                                 icon: "shield.fill",
-                                title: "Ваш BR",
+                                title: "Your BR",
                                 value: "\(gameState.pilot.battleRating)",
                                 valueColor: .cyan
                             )
@@ -141,7 +141,7 @@ struct MissionDetailsSheet: View {
                                 ForEach(template.requiredModules, id: \.self) { module in
                                     MissionDetailRow(
                                         icon: "wrench.fill",
-                                        title: "Модуль",
+                                        title: "Module",
                                         value: module,
                                         valueColor: gameState.aircraft.installedModules.contains(module) ? .green : .red
                                     )
@@ -150,7 +150,7 @@ struct MissionDetailsSheet: View {
                             
                             MissionDetailRow(
                                 icon: "star.fill",
-                                title: "Награда",
+                                title: "Reward",
                                 value: "\(estimatedReward)",
                                 valueColor: .yellow
                             )
@@ -158,7 +158,7 @@ struct MissionDetailsSheet: View {
                             if template.modifier != .none {
                                 MissionDetailRow(
                                     icon: "exclamationmark.triangle.fill",
-                                    title: "Модификатор",
+                                    title: "Modifier",
                                     value: template.modifier.rawValue,
                                     valueColor: .orange
                                 )
@@ -169,7 +169,7 @@ struct MissionDetailsSheet: View {
                     }
                 }
                 
-                // Фиксированные кнопки внизу
+                // Fixed buttons at bottom
                 VStack(spacing: 12) {
                     if !readiness.ready {
                         Text(readiness.reason ?? "")
@@ -186,7 +186,7 @@ struct MissionDetailsSheet: View {
                     Button(action: {
                         onExecute()
                     }) {
-                        Text("НАЧАТЬ МИССИЮ")
+                        Text("START MISSION")
                             .font(.system(size: 18, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -211,7 +211,7 @@ struct MissionDetailsSheet: View {
                     .disabled(!readiness.ready || !canStart.canStart)
                     
                     Button(action: { dismiss() }) {
-                        Text("Отмена")
+                        Text("Cancel")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity)

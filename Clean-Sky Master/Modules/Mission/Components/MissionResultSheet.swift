@@ -33,7 +33,7 @@ struct MissionResultSheet: View {
             
             ScrollView {
                 VStack(spacing: 24) {
-                    // Иконка результата
+                    // Result icon
                     ZStack {
                         Circle()
                             .fill((result.success ? Color.green : Color.red).opacity(0.2))
@@ -43,7 +43,7 @@ struct MissionResultSheet: View {
                             .font(.system(size: 60))
                             .foregroundColor(result.success ? .green : .red)
                         
-                        // Эффект повышения уровня
+                        // Level up effect
                         if result.leveledUp {
                             Circle()
                                 .stroke(Color.yellow, lineWidth: 3)
@@ -56,7 +56,7 @@ struct MissionResultSheet: View {
                     }
                     .padding(.top, 40)
                     
-                    // Уведомление о повышении уровня
+                    // Level up notification
                     if result.leveledUp, let newLevel = result.newLevel {
                         VStack(spacing: 8) {
                             HStack(spacing: 8) {
@@ -64,7 +64,7 @@ struct MissionResultSheet: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(.yellow)
                                 
-                                Text("ПОВЫШЕНИЕ УРОВНЯ!")
+                                Text("LEVEL UP!")
                                     .font(.system(size: 22, weight: .bold, design: .rounded))
                                     .foregroundColor(.yellow)
                                 
@@ -73,7 +73,7 @@ struct MissionResultSheet: View {
                                     .foregroundColor(.yellow)
                             }
                             
-                            Text("Уровень \(newLevel)")
+                            Text("Level \(newLevel)")
                                 .font(.system(size: 18, weight: .semibold))
                                 .foregroundColor(.white)
                         }
@@ -95,7 +95,7 @@ struct MissionResultSheet: View {
                         .padding(.horizontal)
                     }
                     
-                    // Детальный отчёт
+                    // Detailed report
                     VStack(alignment: .leading, spacing: 12) {
                         Text(detailedReport)
                             .font(.system(size: 15, design: .monospaced))
@@ -109,12 +109,12 @@ struct MissionResultSheet: View {
                     )
                     .padding(.horizontal)
                     
-                    // Результаты
+                    // Results
                     VStack(spacing: 12) {
                         if result.reward > 0 {
                             ResultStatRow(
                                 icon: "star.fill",
-                                title: "Получено кредитов",
+                                title: "Credits received",
                                 value: "+\(result.reward)",
                                 color: .yellow
                             )
@@ -123,7 +123,7 @@ struct MissionResultSheet: View {
                         if result.fuelUsed > 0 {
                             ResultStatRow(
                                 icon: "fuelpump.fill",
-                                title: "Использовано топлива",
+                                title: "Fuel used",
                                 value: "-\(Int(result.fuelUsed))%",
                                 color: .cyan
                             )
@@ -132,7 +132,7 @@ struct MissionResultSheet: View {
                         if result.damageReceived > 0 {
                             ResultStatRow(
                                 icon: "exclamationmark.triangle.fill",
-                                title: "Получено повреждений",
+                                title: "Damage received",
                                 value: "-\(Int(result.damageReceived))%",
                                 color: .red
                             )
@@ -141,13 +141,13 @@ struct MissionResultSheet: View {
                         if result.experienceGained > 0 {
                             ResultStatRow(
                                 icon: "chart.line.uptrend.xyaxis",
-                                title: "Получено опыта",
+                                title: "Experience gained",
                                 value: "+\(result.experienceGained) XP",
                                 color: .purple
                             )
                         }
                         
-                        // Повышение уровня
+                        // Level up
                         if result.leveledUp, let newLevel = result.newLevel {
                             VStack(spacing: 8) {
                                 HStack {
@@ -156,13 +156,13 @@ struct MissionResultSheet: View {
                                         .foregroundColor(.yellow)
                                         .frame(width: 30)
                                     
-                                    Text("🎉 ПОВЫШЕНИЕ УРОВНЯ!")
+                                    Text("🎉 LEVEL UP!")
                                         .font(.system(size: 15, weight: .bold))
                                         .foregroundColor(.yellow)
                                     
                                     Spacer()
                                     
-                                    Text("Уровень \(newLevel)")
+                                    Text("Level \(newLevel)")
                                         .font(.system(size: 16, weight: .bold, design: .rounded))
                                         .foregroundColor(.yellow)
                                 }
@@ -185,11 +185,11 @@ struct MissionResultSheet: View {
                             )
                         }
                         
-                        // Полученные skill points
+                        // Skill points gained
                         if result.skillPointsGained > 0 {
                             ResultStatRow(
                                 icon: "sparkles",
-                                title: "Очки улучшений",
+                                title: "Skill points",
                                 value: "+\(result.skillPointsGained)",
                                 color: .cyan
                             )
@@ -198,7 +198,7 @@ struct MissionResultSheet: View {
                     .padding(.horizontal)
                     
                     Button(action: onDismiss) {
-                        Text("Продолжить")
+                        Text("Continue")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)

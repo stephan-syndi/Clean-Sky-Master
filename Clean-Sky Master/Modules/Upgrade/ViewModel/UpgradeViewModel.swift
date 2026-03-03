@@ -11,38 +11,38 @@ import Combine
 
 // MARK: - Upgrade View Model
 //
-// АКТИВНЫЙ MVVM VIEW MODEL
+// ACTIVE MVVM VIEW MODEL
 //
-// Управляет системой апгрейдов:
-// - Список доступных апгрейдов
-// - Купленные апгрейды
-// - Баланс очков улучшений
-// - Дерево зависимостей и разблокировка
-// - Применение эффектов к самолету
-// - Сохранение/загрузка прогресса
+// Manages upgrade system:
+// - List of available upgrades
+// - Purchased upgrades
+// - Balance of upgrade points
+// - Dependency tree and unlocking
+// - Applying effects to aircraft
+// - Saving/loading progress
 //
-// Использует модели данных из Upgrade.swift:
+// Uses data models from Upgrade.swift:
 // - Upgrade, UpgradeEffect, EffectType
 // - UpgradeCategory
 
-/// ViewModel для управления апгрейдами
+/// ViewModel for upgrades management
 class UpgradeViewModel: ObservableObject {
     
     // MARK: - Published Properties
     
-    /// Список всех апгрейдов
+    /// List of all upgrades
     @Published var upgrades: [Upgrade] = []
     
-    /// Категории апгрейдов
+    /// Upgrade categories
     @Published var categories: [UpgradeCategory] = []
     
-    /// Баланс очков улучшений
+    /// Balance of upgrade points
     @Published var upgradePoints: Int = 1500
     
-    /// Текущий выбранный апгрейд
+    /// Currently selected upgrade
     @Published var selectedUpgrade: Upgrade?
     
-    /// Фильтр по категории (nil = все)
+    /// Filter by category (nil = all)
     @Published var selectedCategoryFilter: String?
     
     // MARK: - Initialization
@@ -53,61 +53,61 @@ class UpgradeViewModel: ObservableObject {
     
     // MARK: - Upgrade Management
     
-    /// Загружает стандартный набор апгрейдов
+    /// Loads default set of upgrades
     func loadDefaultUpgrades() {
         upgrades = Upgrade.createDefaultUpgrades()
         categories = Upgrade.createDefaultCategories(for: upgrades)
     }
     
-    /// Покупает апгрейд
-    /// - Parameter upgrade: Апгрейд для покупки
-    /// - Returns: true если покупка успешна, false если не хватает очков или апгрейд недоступен
+    /// Purchase upgrade
+    /// - Parameter upgrade: Upgrade to purchase
+    /// - Returns: true if purchase successful, false if insufficient points or upgrade unavailable
     @discardableResult
     func purchaseUpgrade(_ upgrade: Upgrade) -> Bool {
-        // Проверка наличия очков
+        // Check points availability
         guard upgradePoints >= upgrade.cost else {
             return false
         }
         
-        // Проверка разблокировки
+        // Check unlock status
         guard upgrade.isUnlocked else {
             return false
         }
         
-        // Проверка что еще не куплен
+        // Check not already purchased
         guard !upgrade.isPurchased else {
             return false
         }
         
-        // Находим индекс апгрейда
+        // Find upgrade index
         guard let index = upgrades.firstIndex(where: { $0.id == upgrade.id }) else {
             return false
         }
         
-        // Списываем очки
+        // Deduct points
         upgradePoints -= upgrade.cost
         
-        // Помечаем как купленный
+        // Mark as purchased
         upgrades[index].isPurchased = true
         
-        // Разблокируем зависимые апгрейды
+        // Unlock dependent upgrades
         unlockDependentUpgrades(for: upgrade)
         
         return true
     }
     
-    /// Разблокирует апгрейды, зависящие от указанного
-    /// - Parameter upgrade: Купленный апгрейд
+    /// Unlocks upgrades depending on specified one
+    /// - Parameter upgrade: Purchased upgrade
     private func unlockDependentUpgrades(for upgrade: Upgrade) {
         for i in upgrades.indices {
-            // Если требования содержат имя купленного апгрейда
+            // If requirements contain name of purchased upgrade
             if upgrades[i].requirements.contains(upgrade.name) {
-                // Проверяем все требования
+                // Check all requirements
                 let allRequirementsMet = upgrades[i].requirements.allSatisfy { reqName in
                     upgrades.contains { $0.name == reqName && $0.isPurchased }
                 }
                 
-                // Разблокируем если все требования выполнены
+                // Unlock if all requirements are met
                 if allRequirementsMet {
                     upgrades[i].isUnlocked = true
                 }
@@ -115,33 +115,33 @@ class UpgradeViewModel: ObservableObject {
         }
     }
     
-    /// Проверяет, может ли апгрейд быть куплен
-    /// - Parameter upgrade: Апгрейд для проверки
-    /// - Returns: Кортеж (можно купить, причина если нельзя)
+    /// Checks if upgrade can be purchased
+    /// - Parameter upgrade: Upgrade to check
+    /// - Returns: Tuple (can purchase, reason if not)
     func canPurchase(_ upgrade: Upgrade) -> (canPurchase: Bool, reason: String?) {
-        // Уже куплен
+        // Already purchased
         if upgrade.isPurchased {
-            return (false, "Уже приобретено")
+            return (false, "Already purchased")
         }
         
-        // Не разблокирован
+        // Not unlocked
         if !upgrade.isUnlocked {
             let reqList = upgrade.requirements.joined(separator: ", ")
-            return (false, "Требуется: \(reqList)")
+            return (false, "Requires: \(reqList)")
         }
         
-        // Недостаточно очков
+        // Insufficient points
         if upgradePoints < upgrade.cost {
-            return (false, "Недостаточно очков (\(upgrade.cost) требуется)")
+            return (false, "Insufficient points (\(upgrade.cost) required)")
         }
         
         return (true, nil)
     }
     
-    /// Применяет эффект апгрейда к самолету
+    /// Applies upgrade effect to aircraft
     /// - Parameters:
-    ///   - upgrade: Апгрейд для применения
-    ///   - aircraftVM: AircraftViewModel для модификации
+    ///   - upgrade: Upgrade to apply
+    ///   - aircraftVM: AircraftViewModel for modification
     func applyUpgradeEffect(_ upgrade: Upgrade, to aircraftVM: AircraftViewModel) {
         let effect = upgrade.effect
         
@@ -156,18 +156,18 @@ class UpgradeViewModel: ObservableObject {
             aircraftVM.upgradeMaxFuel(by: newMax - currentMax)
             
         case .health:
-            // Health влияет на armor
+            // Health affects armor
             let bonusPercent = effect.value / 100.0
             let bonus = Int(Double(aircraftVM.aircraft.armor) * bonusPercent)
             aircraftVM.upgradeArmor(by: bonus)
             
         case .capacity:
-            // Увеличиваем максимальное топливо
+            // Increase maximum fuel
             aircraftVM.upgradeMaxFuel(by: effect.value)
             
         case .efficiency:
-            // Эффективность - косвенный эффект, применяется при расчете миссий
-            // Можно сохранить в отдельном свойстве или использовать модификатор
+            // Efficiency - indirect effect, applied in mission calculations
+            // Can be stored in separate property or use modifier
             break
             
         case .armor:
@@ -181,8 +181,8 @@ class UpgradeViewModel: ObservableObject {
         }
     }
     
-    /// Применяет все купленные апгрейды к самолету
-    /// - Parameter aircraftVM: AircraftViewModel для модификации
+    /// Applies all purchased upgrades to aircraft
+    /// - Parameter aircraftVM: AircraftViewModel for modification
     func applyAllPurchasedUpgrades(to aircraftVM: AircraftViewModel) {
         let purchased = upgrades.filter { $0.isPurchased }
         for upgrade in purchased {
@@ -192,41 +192,41 @@ class UpgradeViewModel: ObservableObject {
     
     // MARK: - Filtering & Search
     
-    /// Возвращает апгрейды для указанной категории
-    /// - Parameter category: Категория апгрейдов
-    /// - Returns: Массив апгрейдов в категории
+    /// Returns upgrades for specified category
+    /// - Parameter category: Upgrade category
+    /// - Returns: Array of upgrades in category
     func upgrades(for category: UpgradeCategory) -> [Upgrade] {
         return upgrades.filter { upgrade in
             category.upgradeIds.contains(upgrade.id)
         }
     }
     
-    /// Возвращает все доступные для покупки апгрейды
+    /// Returns all available for purchase upgrades
     var availableUpgrades: [Upgrade] {
         return upgrades.filter { $0.isUnlocked && !$0.isPurchased }
     }
     
-    /// Возвращает все купленные апгрейды
+    /// Returns all purchased upgrades
     var purchasedUpgrades: [Upgrade] {
         return upgrades.filter { $0.isPurchased }
     }
     
-    /// Возвращает все заблокированные апгрейды
+    /// Returns all locked upgrades
     var lockedUpgrades: [Upgrade] {
         return upgrades.filter { !$0.isUnlocked }
     }
     
     // MARK: - Points Management
     
-    /// Добавляет очки улучшений
-    /// - Parameter points: Количество очков для добавления
+    /// Adds upgrade points
+    /// - Parameter points: Number of points to add
     func addPoints(_ points: Int) {
         upgradePoints += points
     }
     
-    /// Снимает очки улучшений
-    /// - Parameter points: Количество очков для снятия
-    /// - Returns: true если успешно, false если недостаточно очков
+    /// Deducts upgrade points
+    /// - Parameter points: Number of points to deduct
+    /// - Returns: true if successful, false if insufficient points
     @discardableResult
     func spendPoints(_ points: Int) -> Bool {
         guard upgradePoints >= points else {
@@ -238,7 +238,7 @@ class UpgradeViewModel: ObservableObject {
     
     // MARK: - Statistics
     
-    /// Возвращает статистику по апгрейдам
+    /// Returns upgrade statistics
     var statistics: UpgradeStatistics {
         let total = upgrades.count
         let purchased = purchasedUpgrades.count
@@ -256,7 +256,7 @@ class UpgradeViewModel: ObservableObject {
         )
     }
     
-    /// Возвращает прогресс по каждой категории
+    /// Returns progress for each category
     func categoryProgress(_ category: UpgradeCategory) -> (purchased: Int, total: Int) {
         let categoryUpgrades = upgrades(for: category)
         let purchased = categoryUpgrades.filter { $0.isPurchased }.count
@@ -265,31 +265,31 @@ class UpgradeViewModel: ObservableObject {
     
     // MARK: - Utility
     
-    /// Сбрасывает все апгрейды (для тестирования или новой игры)
+    /// Resets all upgrades (for testing or new game)
     func resetAllUpgrades() {
         for i in upgrades.indices {
             upgrades[i].isPurchased = false
             
-            // Разблокируем только те, у которых нет зависимостей
+            // Unlock only those without dependencies
             upgrades[i].isUnlocked = upgrades[i].requirements.isEmpty
         }
-        upgradePoints = 1500 // Начальное количество очков
+        upgradePoints = 1500 // Initial amount of points
     }
     
-    /// Разблокирует все апгрейды (для тестирования)
+    /// Unlocks all upgrades (for testing)
     func unlockAll() {
         for i in upgrades.indices {
             upgrades[i].isUnlocked = true
         }
     }
     
-    /// Выбирает апгрейд для просмотра деталей
-    /// - Parameter upgrade: Апгрейд для выбора
+    /// Selects upgrade to view details
+    /// - Parameter upgrade: Upgrade to select
     func selectUpgrade(_ upgrade: Upgrade) {
         selectedUpgrade = upgrade
     }
     
-    /// Очищает выбранный апгрейд
+    /// Clears selected upgrade
     func clearSelection() {
         selectedUpgrade = nil
     }
@@ -297,7 +297,7 @@ class UpgradeViewModel: ObservableObject {
 
 // MARK: - Supporting Types
 
-/// Статистика по апгрейдам
+/// Upgrade statistics
 struct UpgradeStatistics {
     let totalUpgrades: Int
     let purchasedUpgrades: Int

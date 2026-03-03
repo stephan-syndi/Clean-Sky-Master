@@ -11,12 +11,12 @@ import SwiftUI
 // MARK: - Mission Category
 
 enum MissionCategory: String, CaseIterable, Codable {
-    case patrol = "Патруль"
-    case smuggling = "Контрабанда"
-    case bossHunt = "Охота"
-    case storm = "Шторм"
-    case rescue = "Спасение"
-    case escort = "Эскорт"
+    case patrol = "Patrol"
+    case smuggling = "Smuggling"
+    case bossHunt = "Hunt"
+    case storm = "Storm"
+    case rescue = "Rescue"
+    case escort = "Escort"
     
     var icon: String {
         switch self {
@@ -45,20 +45,20 @@ enum MissionCategory: String, CaseIterable, Codable {
 
 enum MissionModifier: String {
     case none = ""
-    case weather = "Плохая погода"
-    case night = "Ночной вылет"
-    case lowFuel = "Нехватка топлива"
-    case damaged = "Повреждённый самолёт"
-    case timeLimit = "Жёсткий дедлайн"
+    case weather = "Bad Weather"
+    case night = "Night Flight"
+    case lowFuel = "Low Fuel"
+    case damaged = "Damaged Aircraft"
+    case timeLimit = "Strict Deadline"
     
     var description: String {
         switch self {
         case .none: return ""
-        case .weather: return "Погодные условия усложняют миссию"
-        case .night: return "Ночь снижает видимость"
-        case .lowFuel: return "Ограниченный запас топлива"
-        case .damaged: return "Самолёт повреждён с самого начала"
-        case .timeLimit: return "Время ограничено"
+        case .weather: return "Weather conditions complicate the mission"
+        case .night: return "Night reduces visibility"
+        case .lowFuel: return "Limited fuel supply"
+        case .damaged: return "Aircraft damaged from the start"
+        case .timeLimit: return "Time is limited"
         }
     }
     
@@ -92,49 +92,49 @@ struct MissionTemplate {
     let briefing: String
     let baseReward: Int
     let baseDifficulty: Double
-    let minBattleRating: Int // Минимальный BR
-    let requiredModules: [String] // Специальные модули
-    let choices: [MissionChoice]? // Выбор в миссии
+    let minBattleRating: Int // Minimum BR
+    let requiredModules: [String] // Special modules
+    let choices: [MissionChoice]? // Choice in mission
     let modifier: MissionModifier
     
-    // Генерация отчёта
+    // Report generation
     func generateReport(success: Bool, choiceIndex: Int? = nil, damage: Double = 0, lootFound: Int = 0) -> String {
         var report = ""
         
-        // Начало отчёта
+        // Report header
         switch category {
         case .patrol:
-            report += "[ ПАТРУЛЬНЫЙ ОТЧЁТ ]\n\n"
+            report += "[ PATROL REPORT ]\n\n"
         case .smuggling:
-            report += "[ КОНФИДЕНЦИАЛЬНЫЙ ОТЧЁТ ]\n\n"
+            report += "[ CONFIDENTIAL REPORT ]\n\n"
         case .bossHunt:
-            report += "[ БОЕВОЙ ОТЧЁТ ]\n\n"
+            report += "[ COMBAT REPORT ]\n\n"
         case .storm:
-            report += "[ ЭКСТРЕННЫЙ ОТЧЁТ ]\n\n"
+            report += "[ EMERGENCY REPORT ]\n\n"
         case .rescue:
-            report += "[ СПАСАТЕЛЬНАЯ ОПЕРАЦИЯ ]\n\n"
+            report += "[ RESCUE OPERATION ]\n\n"
         case .escort:
-            report += "[ ОТЧЁТ ОБ ЭСКОРТЕ ]\n\n"
+            report += "[ ESCORT REPORT ]\n\n"
         }
         
-        // Модификатор
+        // Modifier
         if modifier != .none {
             report += "⚠️ \(modifier.rawValue): \(modifier.description)\n\n"
         }
         
-        // Основной сюжет миссии
+        // Main mission story
         if success {
             report += generateSuccessReport(choiceIndex: choiceIndex, lootFound: lootFound)
         } else {
             report += generateFailureReport(damage: damage)
         }
         
-        // Итог
+        // Conclusion
         report += "\n\n"
         if success {
-            report += "✅ МИССИЯ ЗАВЕРШЕНА УСПЕШНО"
+            report += "✅ MISSION COMPLETED SUCCESSFULLY"
         } else {
-            report += "❌ МИССИЯ ПРОВАЛЕНА"
+            report += "❌ MISSION FAILED"
         }
         
         return report
@@ -145,52 +145,52 @@ struct MissionTemplate {
         
         switch category {
         case .patrol:
-            report += "Патрулирование сектора прошло без происшествий. "
+            report += "Sector patrol completed without incidents. "
             if let choice = choiceIndex, let choices = choices {
                 report += choices[choice].reportOutcome + " "
             }
             if lootFound > 0 {
-                report += "\n\nОбнаружен заброшенный склад с ресурсами (+\(lootFound) кредитов). "
+                report += "\n\nAbandoned warehouse with resources discovered (+\(lootFound) credits). "
             }
-            report += "\n\nВоздушное пространство очищено. Все системы работают в штатном режиме."
+            report += "\n\nAirspace cleared. All systems operating normally."
             
         case .smuggling:
             if let choice = choiceIndex, let choices = choices {
                 report += choices[choice].reportOutcome
             } else {
-                report += "Контрабандный груз доставлен в точку назначения. Клиент доволен. Никаких вопросов не возникло."
+                report += "Contraband cargo delivered to destination. Client is satisfied. No questions asked."
             }
             
         case .bossHunt:
-            report += "КОНТАКТ С ЦЕЛЬЮ УСТАНОВЛЕН!\n\n"
-            report += "Враг обнаружен на координатах [ЗАСЕКРЕЧЕНО]. Завязан воздушный бой.\n\n"
-            report += "⚔️ ХОД БОЕВЫХ ДЕЙСТВИЙ:\n"
-            report += "• 00:42 - Первый залп. Противник маневрирует.\n"
-            report += "• 01:15 - Прямое попадание! Урон противнику.\n"
-            report += "• 02:03 - Вражеский контр-удар уклонён.\n"
-            report += "• 03:21 - Критическое попадание! Цель уничтожена.\n\n"
-            report += "🏆 Редкие модули извлечены из обломков."
+            report += "CONTACT WITH TARGET ESTABLISHED!\n\n"
+            report += "Enemy detected at coordinates [CLASSIFIED]. Air combat engaged.\n\n"
+            report += "⚔️ COMBAT OPERATIONS:\n"
+            report += "• 00:42 - First volley. Enemy maneuvering.\n"
+            report += "• 01:15 - Direct hit! Damage to enemy.\n"
+            report += "• 02:03 - Enemy counter-attack evaded.\n"
+            report += "• 03:21 - Critical hit! Target destroyed.\n\n"
+            report += "🏆 Rare modules extracted from wreckage."
             
         case .storm:
-            report += "🌩️ ЭКСТРЕМАЛЬНЫЕ ПОГОДНЫЕ УСЛОВИЯ\n\n"
-            report += "Штормовой фронт застал нас на высоте 7000 метров. "
-            report += "Молнии повредили радиосвязь. Приборы отказали на 90 секунд.\n\n"
-            report += "Пилот проявил выдающееся мастерство, управляя самолётом вслепую. "
-            report += "Пробились через грозовые облака. "
-            report += "Груз доставлен целым, хотя обшивка получила повреждения.\n\n"
-            report += "⚡ Это был адский полёт, но мы справились."
+            report += "🌩️ EXTREME WEATHER CONDITIONS\n\n"
+            report += "Storm front caught us at 7000 meters altitude. "
+            report += "Lightning damaged radio communications. Instruments failed for 90 seconds.\n\n"
+            report += "Pilot showed outstanding skill, flying blind. "
+            report += "Broke through storm clouds. "
+            report += "Cargo delivered intact, though hull took damage.\n\n"
+            report += "⚡ That was a hell of a flight, but we made it."
             
         case .rescue:
-            report += "Спасательная операция выполнена в срок.\n\n"
-            report += "Все пострадавшие эвакуированы из зоны бедствия. "
-            report += "Медицинская помощь оказана на борту.\n\n"
-            report += "🚑 Спасено жизней: \(Int.random(in: 5...15))"
+            report += "Rescue operation completed on time.\n\n"
+            report += "All victims evacuated from disaster zone. "
+            report += "Medical assistance provided on board.\n\n"
+            report += "🚑 Lives saved: \(Int.random(in: 5...15))"
             
         case .escort:
-            report += "Эскортирование VIP-клиента прошло успешно.\n\n"
-            report += "Маршрут пройден без инцидентов. "
-            report += "Клиент доставлен в целости и сохранности.\n\n"
-            report += "💼 Получена премия за качество обслуживания."
+            report += "VIP client escorted successfully.\n\n"
+            report += "Route completed without incidents. "
+            report += "Client delivered safe and sound.\n\n"
+            report += "💼 Premium received for quality service."
         }
         
         return report
@@ -201,39 +201,39 @@ struct MissionTemplate {
         
         switch category {
         case .patrol:
-            report += "Патрулирование прервано из-за технических неполадок. "
-            report += "Пришлось вернуться на базу досрочно."
+            report += "Patrol interrupted due to technical malfunctions. "
+            report += "Had to return to base early."
             
         case .smuggling:
-            report += "⚠️ ПРОВАЛ ОПЕРАЦИИ\n\n"
-            report += "Обнаружены патрулём пограничной службы. "
-            report += "Груз конфискован. Получены повреждения при попытке уйти."
+            report += "⚠️ OPERATION FAILED\n\n"
+            report += "Detected by border patrol. "
+            report += "Cargo confiscated. Took damage trying to escape."
             
         case .bossHunt:
-            report += "❌ БОЕВАЯ НЕУДАЧА\n\n"
-            report += "Противник оказался сильнее ожидаемого. "
-            report += "Получены критические повреждения. "
-            report += "Вынужденное отступление.\n\n"
-            report += "Требуется усиление огневой мощи перед повторной попыткой."
+            report += "❌ COMBAT FAILURE\n\n"
+            report += "Enemy was stronger than expected. "
+            report += "Critical damage sustained. "
+            report += "Forced retreat.\n\n"
+            report += "Firepower upgrade required before retry."
             
         case .storm:
-            report += "⚠️ АВАРИЙНАЯ ПОСАДКА\n\n"
-            report += "Шторм оказался сильнее прогнозов. "
-            report += "Множественные отказы систем. "
-            report += "Совершена вынужденная посадка в запасном аэропорту."
+            report += "⚠️ EMERGENCY LANDING\n\n"
+            report += "Storm was stronger than forecasts. "
+            report += "Multiple system failures. "
+            report += "Emergency landing at backup airport."
             
         case .rescue:
-            report += "Спасательная операция сорвана.\n\n"
-            report += "Не удалось достичь зоны бедствия в срок. "
-            report += "Погодные условия вынудили вернуться."
+            report += "Rescue operation failed.\n\n"
+            report += "Failed to reach disaster zone in time. "
+            report += "Weather conditions forced return."
             
         case .escort:
-            report += "Эскорт прерван.\n\n"
-            report += "Самолёт получил повреждения. Клиент недоволен."
+            report += "Escort interrupted.\n\n"
+            report += "Aircraft took damage. Client is displeased."
         }
         
         if damage > 0 {
-            report += "\n\n💥 Получено повреждений: \(Int(damage))%"
+            report += "\n\n💥 Damage sustained: \(Int(damage))%"
         }
         
         return report
@@ -244,27 +244,27 @@ struct MissionTemplate {
 
 struct MissionTemplatesLibrary {
     static let allTemplates: [MissionTemplate] = [
-        // ПАТРУЛИ
+        // PATROLS
         MissionTemplate(
             category: .patrol,
-            name: "Рутинный патруль",
-            briefing: "Стандартный облёт территории. Низкий риск, стабильная награда.",
+            name: "Routine Patrol",
+            briefing: "Standard territory flyover. Low risk, stable reward.",
             baseReward: 150,
             baseDifficulty: 0.8,
             minBattleRating: 0,
             requiredModules: [],
             choices: [
                 MissionChoice(
-                    text: "Следовать строго по маршруту",
+                    text: "Follow route strictly",
                     riskLevel: 0.1,
                     rewardMultiplier: 1.0,
-                    reportOutcome: "Маршрут пройден по протоколу."
+                    reportOutcome: "Route completed by protocol."
                 ),
                 MissionChoice(
-                    text: "Исследовать подозрительный сигнал",
+                    text: "Investigate suspicious signal",
                     riskLevel: 0.4,
                     rewardMultiplier: 1.5,
-                    reportOutcome: "Проверка сигнала выявила контрабандистов. Получена премия от властей."
+                    reportOutcome: "Signal investigation revealed smugglers. Received bonus from authorities."
                 )
             ],
             modifier: .none
@@ -272,24 +272,24 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .patrol,
-            name: "Разведка местности",
-            briefing: "Облёт новой территории для составления карты.",
+            name: "Terrain Reconnaissance",
+            briefing: "Flyover of new territory for mapping.",
             baseReward: 180,
             baseDifficulty: 0.9,
             minBattleRating: 1,
             requiredModules: [],
             choices: [
                 MissionChoice(
-                    text: "Облететь на безопасной высоте",
+                    text: "Fly at safe altitude",
                     riskLevel: 0.15,
                     rewardMultiplier: 1.0,
-                    reportOutcome: "Карта составлена. Местность нанесена на схему."
+                    reportOutcome: "Map completed. Terrain plotted on chart."
                 ),
                 MissionChoice(
-                    text: "Лететь низко для детальной съёмки",
+                    text: "Fly low for detailed photography",
                     riskLevel: 0.35,
                     rewardMultiplier: 1.4,
-                    reportOutcome: "Получены детальные снимки! Обнаружены интересные объекты."
+                    reportOutcome: "Detailed photos obtained! Interesting objects discovered."
                 )
             ],
             modifier: .none
@@ -297,24 +297,24 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .escort,
-            name: "Сопровождение курьера",
-            briefing: "Обеспечить безопасность курьерского рейса.",
+            name: "Courier Escort",
+            briefing: "Ensure safety of courier flight.",
             baseReward: 220,
             baseDifficulty: 1.0,
             minBattleRating: 2,
             requiredModules: [],
             choices: [
                 MissionChoice(
-                    text: "Лететь по стандартному маршруту",
+                    text: "Fly standard route",
                     riskLevel: 0.25,
                     rewardMultiplier: 1.0,
-                    reportOutcome: "Курьер доставлен вовремя."
+                    reportOutcome: "Courier delivered on time."
                 ),
                 MissionChoice(
-                    text: "Использовать окольный путь",
+                    text: "Use roundabout path",
                     riskLevel: 0.1,
                     rewardMultiplier: 0.9,
-                    reportOutcome: "Безопасный маршрут выбран. Небольшая задержка, но без происшествий."
+                    reportOutcome: "Safe route chosen. Slight delay, but no incidents."
                 )
             ],
             modifier: .none
@@ -322,8 +322,8 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .patrol,
-            name: "Ночной дозор",
-            briefing: "Патрулирование в ночное время. Ограниченная видимость.",
+            name: "Night Watch",
+            briefing: "Night-time patrol. Limited visibility.",
             baseReward: 200,
             baseDifficulty: 1.2,
             minBattleRating: 3,
@@ -334,24 +334,24 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .rescue,
-            name: "Поиск пропавших",
-            briefing: "Найти сигнал маяка разбившегося самолёта.",
+            name: "Search for Missing",
+            briefing: "Find beacon signal from crashed aircraft.",
             baseReward: 280,
             baseDifficulty: 1.3,
             minBattleRating: 4,
             requiredModules: [],
             choices: [
                 MissionChoice(
-                    text: "Искать в указанном квадрате",
+                    text: "Search in designated area",
                     riskLevel: 0.3,
                     rewardMultiplier: 1.0,
-                    reportOutcome: "Маяк найден в указанной зоне. Координаты переданы спасателям."
+                    reportOutcome: "Beacon found in designated zone. Coordinates transmitted to rescuers."
                 ),
                 MissionChoice(
-                    text: "Расширить зону поиска",
+                    text: "Expand search area",
                     riskLevel: 0.5,
                     rewardMultiplier: 1.3,
-                    reportOutcome: "Обнаружили выживших! Экстренная эвакуация выполнена."
+                    reportOutcome: "Found survivors! Emergency evacuation completed."
                 )
             ],
             modifier: .none
@@ -359,24 +359,24 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .patrol,
-            name: "Охрана границы",
-            briefing: "Патрулирование пограничной зоны.",
+            name: "Border Guard",
+            briefing: "Border zone patrol.",
             baseReward: 320,
             baseDifficulty: 1.4,
             minBattleRating: 6,
             requiredModules: [],
             choices: [
                 MissionChoice(
-                    text: "Обычное патрулирование",
+                    text: "Regular patrol",
                     riskLevel: 0.2,
                     rewardMultiplier: 1.0,
-                    reportOutcome: "Патруль завершён без инцидентов."
+                    reportOutcome: "Patrol completed without incidents."
                 ),
                 MissionChoice(
-                    text: "Перехватить нарушителя",
+                    text: "Intercept violator",
                     riskLevel: 0.6,
                     rewardMultiplier: 1.6,
-                    reportOutcome: "Нарушитель остановлен! Пограничная служба благодарит за содействие."
+                    reportOutcome: "Violator stopped! Border service thanks for assistance."
                 )
             ],
             modifier: .none
@@ -384,8 +384,8 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .escort,
-            name: "Охрана VIP",
-            briefing: "Эскорт важной персоны. Требуется максимальная внимательность.",
+            name: "VIP Protection",
+            briefing: "Escort important person. Maximum attention required.",
             baseReward: 450,
             baseDifficulty: 1.6,
             minBattleRating: 8,
@@ -394,27 +394,27 @@ struct MissionTemplatesLibrary {
             modifier: .none
         ),
         
-        // КОНТРАБАНДА
+        // SMUGGLING
         MissionTemplate(
             category: .smuggling,
-            name: "Контрабандный рейс",
-            briefing: "Доставка нелегального груза. Риск штрафа, но щедрая оплата.",
+            name: "Contraband Flight",
+            briefing: "Illegal cargo delivery. Risk of fine, but generous payment.",
             baseReward: 400,
             baseDifficulty: 1.5,
             minBattleRating: 10,
             requiredModules: [],
             choices: [
                 MissionChoice(
-                    text: "Пройти мимо патруля",
+                    text: "Avoid the patrol",
                     riskLevel: 0.3,
                     rewardMultiplier: 0.7,
-                    reportOutcome: "Увидели патруль издалека и сделали крюк. Груз доставлен безопасно, но потратили больше топлива."
+                    reportOutcome: "Spotted patrol from distance and took detour. Cargo delivered safely, but used more fuel."
                 ),
                 MissionChoice(
-                    text: "Взять риск и лететь напрямую",
+                    text: "Take risk and fly direct",
                     riskLevel: 0.7,
                     rewardMultiplier: 1.3,
-                    reportOutcome: "Прорвались сквозь патрульную зону! Груз доставлен, клиент в восторге. Бонус к награде!"
+                    reportOutcome: "Broke through patrol zone! Cargo delivered, client is thrilled. Bonus to reward!"
                 )
             ],
             modifier: .none
@@ -422,59 +422,59 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .smuggling,
-            name: "Теневая доставка",
-            briefing: "Секретная доставка в зону конфликта. Высокий риск обнаружения.",
+            name: "Shadow Delivery",
+            briefing: "Secret delivery to conflict zone. High risk of detection.",
             baseReward: 600,
             baseDifficulty: 2.0,
             minBattleRating: 15,
-            requiredModules: ["Глушитель радаров"],
+            requiredModules: ["Radar Jammer"],
             choices: nil,
             modifier: .none
         ),
         
-        // ОХОТА НА БОССОВ
+        // BOSS HUNTS
         MissionTemplate(
             category: .bossHunt,
-            name: "Охота на Алого Барона",
-            briefing: "Известный ас-наёмник терроризирует торговые пути. Устраните угрозу.",
+            name: "Hunt for Crimson Baron",
+            briefing: "Famous mercenary ace terrorizing trade routes. Eliminate the threat.",
             baseReward: 1000,
             baseDifficulty: 2.5,
             minBattleRating: 25,
-            requiredModules: ["Усиленное вооружение"],
+            requiredModules: ["Enhanced Armament"],
             choices: nil,
             modifier: .none
         ),
         
         MissionTemplate(
             category: .bossHunt,
-            name: "Операция «Гром»",
-            briefing: "Уничтожение вражеского эсминца класса «Titan». Требуется максимальная огневая мощь.",
+            name: "Operation Thunder",
+            briefing: "Destroy enemy destroyer class Titan. Maximum firepower required.",
             baseReward: 1500,
             baseDifficulty: 3.0,
             minBattleRating: 35,
-            requiredModules: ["Ракетная установка", "Усиленная броня"],
+            requiredModules: ["Missile Launcher", "Enhanced Armor"],
             choices: [
                 MissionChoice(
-                    text: "Фронтальная атака",
+                    text: "Frontal attack",
                     riskLevel: 0.8,
                     rewardMultiplier: 1.2,
-                    reportOutcome: "Лобовая атака! Получили серьёзные повреждения, но мощный залп уничтожил цель."
+                    reportOutcome: "Head-on attack! Sustained serious damage, but powerful volley destroyed target."
                 ),
                 MissionChoice(
-                    text: "Обходной манёвр",
+                    text: "Flanking maneuver",
                     riskLevel: 0.5,
                     rewardMultiplier: 1.0,
-                    reportOutcome: "Скрытный подход с фланга. Застали врага врасплох. Цель уничтожена с минимальными потерями."
+                    reportOutcome: "Stealthy approach from flank. Caught enemy off guard. Target destroyed with minimal losses."
                 )
             ],
             modifier: .none
         ),
         
-        // ШТОРМЫ
+        // STORMS
         MissionTemplate(
             category: .storm,
-            name: "Штормовой штурм",
-            briefing: "Срочная доставка медикаментов сквозь грозовой фронт. Экстремальный риск.",
+            name: "Storm Assault",
+            briefing: "Urgent medicine delivery through storm front. Extreme risk.",
             baseReward: 700,
             baseDifficulty: 2.2,
             minBattleRating: 20,
@@ -485,21 +485,21 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .storm,
-            name: "Через ураган",
-            briefing: "Единственный шанс спасти заблокированный город - пролететь через ураган категории 5.",
+            name: "Through the Hurricane",
+            briefing: "Only chance to save blockaded city - fly through category 5 hurricane.",
             baseReward: 900,
             baseDifficulty: 2.8,
             minBattleRating: 30,
-            requiredModules: ["Усиленный корпус"],
+            requiredModules: ["Reinforced Hull"],
             choices: nil,
             modifier: .weather
         ),
         
-        // СПАСЕНИЕ
+        // RESCUE
         MissionTemplate(
             category: .rescue,
-            name: "Горная спасательная",
-            briefing: "Эвакуация альпинистов с вершины. Сложные условия на высоте.",
+            name: "Mountain Rescue",
+            briefing: "Evacuate climbers from peak. Difficult high-altitude conditions.",
             baseReward: 500,
             baseDifficulty: 1.8,
             minBattleRating: 12,
@@ -510,21 +510,21 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .rescue,
-            name: "Операция «Феникс»",
-            briefing: "Спасение выживших после авиакатастрофы. Ограниченное время.",
+            name: "Operation Phoenix",
+            briefing: "Rescue survivors from plane crash. Limited time.",
             baseReward: 800,
             baseDifficulty: 2.3,
             minBattleRating: 18,
-            requiredModules: ["Медицинский отсек"],
+            requiredModules: ["Medical Bay"],
             choices: nil,
             modifier: .timeLimit
         ),
         
-        // ЭСКОРТ
+        // ESCORT
         MissionTemplate(
             category: .escort,
-            name: "VIP эскорт",
-            briefing: "Сопровождение важной персоны. Репутация превыше всего.",
+            name: "VIP Escort",
+            briefing: "Escort important person. Reputation above all.",
             baseReward: 600,
             baseDifficulty: 1.5,
             minBattleRating: 15,
@@ -535,40 +535,40 @@ struct MissionTemplatesLibrary {
         
         MissionTemplate(
             category: .escort,
-            name: "Охрана конвоя",
-            briefing: "Защита торгового конвоя от пиратов. Возможны атаки.",
+            name: "Convoy Guard",
+            briefing: "Protect trade convoy from pirates. Attacks possible.",
             baseReward: 750,
             baseDifficulty: 2.0,
             minBattleRating: 22,
-            requiredModules: ["Оружие"],
+            requiredModules: ["Weapons"],
             choices: [
                 MissionChoice(
-                    text: "Оборонительная тактика",
+                    text: "Defensive tactics",
                     riskLevel: 0.4,
                     rewardMultiplier: 0.9,
-                    reportOutcome: "Держались близко к конвою. Отбили все атаки. Груз цел, но без бонуса."
+                    reportOutcome: "Stayed close to convoy. Repelled all attacks. Cargo intact, but no bonus."
                 ),
                 MissionChoice(
-                    text: "Агрессивное преследование",
+                    text: "Aggressive pursuit",
                     riskLevel: 0.7,
                     rewardMultiplier: 1.3,
-                    reportOutcome: "Выследили пиратскую базу и уничтожили её! Конвой в безопасности. Премия от торговцев!"
+                    reportOutcome: "Tracked down pirate base and destroyed it! Convoy safe. Premium from traders!"
                 )
             ],
             modifier: .none
         )
     ]
     
-    // Получить случайную миссию по сложности
+    // Get random mission by difficulty
     static func getRandomMission(minDifficulty: Double = 0.0, maxDifficulty: Double = 3.0, battleRating: Int = 1) -> MissionTemplate {
-        // Фильтруем миссии по сложности И по BR (с небольшим запасом +3)
+        // Filter missions by difficulty AND BR (with small margin +3)
         let suitable = allTemplates.filter { 
             $0.baseDifficulty >= minDifficulty && 
             $0.baseDifficulty <= maxDifficulty &&
-            $0.minBattleRating <= battleRating + 3 // Небольшой запас для челленджа
+            $0.minBattleRating <= battleRating + 3 // Small margin for challenge
         }
         
-        // Если нет подходящих миссий с учетом BR, берем любую по сложности
+        // If no suitable missions with BR consideration, take any by difficulty
         if suitable.isEmpty {
             let byDifficulty = allTemplates.filter { 
                 $0.baseDifficulty >= minDifficulty && $0.baseDifficulty <= maxDifficulty 
@@ -579,22 +579,22 @@ struct MissionTemplatesLibrary {
         return suitable.randomElement() ?? allTemplates[0]
     }
     
-    // Получить миссию по категории
+    // Get missions by category
     static func getMissionsByCategory(_ category: MissionCategory) -> [MissionTemplate] {
         return allTemplates.filter { $0.category == category }
     }
     
-    // Проверка доступности миссии
+    // Check mission availability
     static func canStartMission(template: MissionTemplate, battleRating: Int, modules: [String]) -> (canStart: Bool, reason: String?) {
-        // Проверка BR
+        // BR check
         if battleRating < template.minBattleRating {
-            return (false, "Требуется BR ≥ \(template.minBattleRating)")
+            return (false, "BR ≥ \(template.minBattleRating) required")
         }
         
-        // Проверка модулей
+        // Module check
         for requiredModule in template.requiredModules {
             if !modules.contains(requiredModule) {
-                return (false, "Требуется модуль: \(requiredModule)")
+                return (false, "Required module: \(requiredModule)")
             }
         }
         

@@ -9,19 +9,19 @@ import SwiftUI
 
 // MARK: - Mission Select View
 //
-// Основной экран выбора миссий.
-// Использует MissionViewModel для управления состоянием миссий:
-// - Список доступных миссий
-// - Выбранная миссия и результаты
-// - Генерация новых миссий
+// Main mission selection screen.
+// Uses MissionViewModel for mission state management:
+// - List of available missions
+// - Selected mission and results
+// - Generation of new missions
 //
-// Интегрирован с GameState для выполнения миссий (legacy совместимость)
+// Integrated with GameState for mission execution (legacy compatibility)
 //
-// Компоненты вынесены в отдельные файлы:
-// - MissionTemplateCard - карточка миссии
-// - MissionChoiceSheet - окно выбора варианта
-// - MissionDetailsSheet - детали миссии
-// - MissionResultSheet - результаты миссии
+// Components are split into separate files:
+// - MissionTemplateCard - mission card
+// - MissionChoiceSheet - choice selection window
+// - MissionDetailsSheet - mission details
+// - MissionResultSheet - mission results
 
 struct MissionSelectView: View {
     @ObservedObject var gameState: GameState
@@ -32,10 +32,10 @@ struct MissionSelectView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Заголовок с Battle Rating
+            // Header with Battle Rating
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("ДОСТУПНЫЕ МИССИИ")
+                    Text("AVAILABLE MISSIONS")
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
@@ -66,13 +66,13 @@ struct MissionSelectView: View {
             }
             .padding()
             
-            // Проверка готовности
+            // Readiness check
             let readiness = gameState.aircraft.isReadyForMission()
             if !readiness.ready {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundColor(.orange)
-                    Text(readiness.reason ?? "Не готов к миссии")
+                    Text(readiness.reason ?? "Not ready for mission")
                         .font(.system(size: 14))
                         .foregroundColor(.orange)
                 }
@@ -84,7 +84,7 @@ struct MissionSelectView: View {
                 .padding(.horizontal)
             }
             
-            // Список миссий
+            // Mission list
             ScrollView {
                 LazyVStack(spacing: 12) {
                     ForEach(missionVM.availableMissions, id: \.name) { mission in
@@ -143,7 +143,7 @@ struct MissionSelectView: View {
                     onDismiss: {
                         showMissionResult = false
                         if result.success {
-                            // Обновляем список миссий через ViewModel
+                            // Update mission list through ViewModel
                             missionVM.refreshMissions(
                                 completedMissionName: mission.name,
                                 battleRating: gameState.pilot.battleRating
@@ -158,7 +158,7 @@ struct MissionSelectView: View {
     
     // MARK: - Private Methods
     
-    /// Выполняет миссию через GameState (legacy совместимость)
+    /// Executes mission through GameState (legacy compatibility)
     private func executeMission(_ template: MissionTemplate) {
         showMissionDetails = false
         
@@ -168,7 +168,7 @@ struct MissionSelectView: View {
                 choiceIndex: missionVM.selectedChoiceIndex
             )
             
-            // Сохраняем результат в ViewModel
+            // Save result in ViewModel
             missionVM.lastResult = result
             showMissionResult = true
         }

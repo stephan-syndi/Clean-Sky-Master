@@ -11,11 +11,11 @@ import Combine
 // MARK: - Mission Type
 
 enum MissionType: String, CaseIterable, Codable {
-    case passenger = "Пассажирская"
-    case cargo = "Грузовая"
-    case rescue = "Спасательная"
-    case training = "Тренировочная"
-    case special = "Специальная"
+    case passenger = "Passenger"
+    case cargo = "Cargo"
+    case rescue = "Rescue"
+    case training = "Training"
+    case special = "Special"
     
     var icon: String {
         switch self {
@@ -41,9 +41,9 @@ enum MissionType: String, CaseIterable, Codable {
 // MARK: - Mission Status
 
 enum MissionStatus: String, Codable {
-    case success = "Успешно"
-    case failure = "Провал"
-    case partial = "Частично"
+    case success = "Success"
+    case failure = "Failure"
+    case partial = "Partial"
 }
 
 // MARK: - Mission (Model)
@@ -56,7 +56,7 @@ struct Mission: Identifiable {
     let date: Date
     let status: MissionStatus
     let distance: Int
-    let flightTime: Int // в минутах
+    let flightTime: Int // in minutes
     let reward: Int
     let report: String
 }
@@ -71,10 +71,10 @@ struct MissionResult {
     let experienceGained: Int
     let message: String
     
-    // Прогресс пилота
-    let leveledUp: Bool // Повысился ли уровень
-    let newLevel: Int? // Новый уровень (если повысился)
-    let skillPointsGained: Int // Полученные очки улучшений
+    // Pilot progress
+    let leveledUp: Bool // Did level up
+    let newLevel: Int? // New level (if leveled up)
+    let skillPointsGained: Int // Skill points gained
     
     init(
         success: Bool,
@@ -99,7 +99,7 @@ struct MissionResult {
     }
 }
 
-// MARK: - Available Mission (для списка миссий)
+// MARK: - Available Mission (for mission list)
 
 struct AvailableMission: Identifiable {
     let id = UUID()
@@ -109,10 +109,10 @@ struct AvailableMission: Identifiable {
     let distance: Double
     let baseReward: Int
     let difficulty: Double
-    let timeEstimate: Int // минуты
+    let timeEstimate: Int // minutes
 }
 
-// MARK: - Date Range (для фильтрации)
+// MARK: - Date Range (for filtering)
 
 enum DateRange: Equatable {
     case all
@@ -124,12 +124,12 @@ enum DateRange: Equatable {
     
     var displayName: String {
         switch self {
-        case .all: return "Все время"
-        case .today: return "Сегодня"
-        case .week: return "Неделя"
-        case .month: return "Месяц"
-        case .year: return "Год"
-        case .custom: return "Период"
+        case .all: return "All time"
+        case .today: return "Today"
+        case .week: return "Week"
+        case .month: return "Month"
+        case .year: return "Year"
+        case .custom: return "Custom"
         }
     }
     

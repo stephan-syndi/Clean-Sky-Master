@@ -14,8 +14,8 @@ struct AircraftDetailsView: View {
     @State private var selectedTab: DetailTab = .aircraft
     
     enum DetailTab: String, CaseIterable {
-        case aircraft = "Самолёт"
-        case pilot = "Пилот"
+        case aircraft = "Aircraft"
+        case pilot = "Pilot"
         
         var icon: String {
             switch self {
@@ -27,7 +27,7 @@ struct AircraftDetailsView: View {
     
     var body: some View {
         ZStack {
-            // Фон
+            // Background
             LinearGradient(
                 gradient: Gradient(colors: [
                     Color(red: 0.05, green: 0.1, blue: 0.2),
@@ -39,13 +39,13 @@ struct AircraftDetailsView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Шапка
+                // Header
                 HStack {
                     Button(action: { dismiss() }) {
                         HStack(spacing: 6) {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 16, weight: .semibold))
-                            Text("Назад")
+                            Text("Back")
                                 .font(.system(size: 17, weight: .medium))
                         }
                         .foregroundColor(.white)
@@ -53,13 +53,13 @@ struct AircraftDetailsView: View {
                     
                     Spacer()
                     
-                    Text("ХАРАКТЕРИСТИКИ")
+                    Text("CHARACTERISTICS")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
                     Spacer()
                     
-                    // Баланс
+                    // Balance
                     HStack(spacing: 6) {
                         Image(systemName: "dollarsign.circle.fill")
                             .foregroundColor(.yellow)
@@ -77,7 +77,7 @@ struct AircraftDetailsView: View {
                 .padding()
                 .background(Color.black.opacity(0.3))
                 
-                // Переключатель вкладок
+                // Tab switcher
                 Picker("Tab", selection: $selectedTab) {
                     ForEach(DetailTab.allCases, id: \.self) { tab in
                         Label(tab.rawValue, systemImage: tab.icon)
@@ -87,7 +87,7 @@ struct AircraftDetailsView: View {
                 .pickerStyle(.segmented)
                 .padding()
                 
-                // Контент
+                // Content
                 ScrollView {
                     if selectedTab == .aircraft {
                         AircraftStatsContent(gameState: gameState)
@@ -107,9 +107,9 @@ struct AircraftStatsContent: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Основные параметры
+            // Main parameters
             VStack(alignment: .leading, spacing: 12) {
-                Text("ОСНОВНЫЕ ПАРАМЕТРЫ")
+                Text("MAIN PARAMETERS")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
@@ -117,7 +117,7 @@ struct AircraftStatsContent: View {
                 VStack(spacing: 10) {
                     StatBar(
                         icon: "fuelpump.fill",
-                        title: "Топливо",
+                        title: "Fuel",
                         value: gameState.aircraft.fuel,
                         maxValue: gameState.aircraft.maxFuel,
                         color: .green,
@@ -126,7 +126,7 @@ struct AircraftStatsContent: View {
                     
                     StatBar(
                         icon: "heart.fill",
-                        title: "Здоровье",
+                        title: "Health",
                         value: gameState.aircraft.health,
                         maxValue: 100,
                         color: .cyan,
@@ -135,9 +135,9 @@ struct AircraftStatsContent: View {
                 }
             }
             
-            // Боевые характеристики
+            // Combat characteristics
             VStack(alignment: .leading, spacing: 12) {
-                Text("БОЕВЫЕ ХАРАКТЕРИСТИКИ")
+                Text("COMBAT CHARACTERISTICS")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
@@ -145,49 +145,49 @@ struct AircraftStatsContent: View {
                 VStack(spacing: 10) {
                     StatNumber(
                         icon: "shield.fill",
-                        title: "Броня",
+                        title: "Armor",
                         value: gameState.aircraft.armor,
                         color: .blue,
-                        description: "Уменьшает повреждения на \(gameState.aircraft.armor * 5)%"
+                        description: "Reduces damage by \(gameState.aircraft.armor * 5)%"
                     )
                     
                     StatNumber(
                         icon: "scope",
-                        title: "Оружие",
+                        title: "Weapons",
                         value: gameState.aircraft.firepower,
                         color: .red,
-                        description: "Базовый урон: \(gameState.aircraft.firepower * 10)"
+                        description: "Base damage: \(gameState.aircraft.firepower * 10)"
                     )
                     
                     StatNumber(
                         icon: "speedometer",
-                        title: "Скорость",
+                        title: "Speed",
                         value: gameState.aircraft.speed,
                         color: .purple,
-                        description: "Уклонение: \(Int(gameState.aircraft.evasionChance * 100)) %",
+                        description: "Evasion: \(Int(gameState.aircraft.evasionChance * 100)) %",
                     )
                 }
             }
             
-            // Грузоподъёмность
+            // Cargo capacity
             VStack(alignment: .leading, spacing: 12) {
-                Text("ЛОГИСТИКА")
+                Text("LOGISTICS")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
                 
                 StatNumber(
                     icon: "shippingbox.fill",
-                    title: "Грузоподъёмность",
+                    title: "Cargo Capacity",
                     value: gameState.aircraft.cargo,
                     color: .orange,
-                    description: "Влияет на доход (+\(Int((Double(gameState.aircraft.cargo) / 500.0) * 100))%)"
+                    description: "Affects income (+\(Int((Double(gameState.aircraft.cargo) / 500.0) * 100))%)"
                 )
             }
             
-            // Расчётные показатели
+            // Calculated metrics
             VStack(alignment: .leading, spacing: 12) {
-                Text("РАСЧЁТНЫЕ ПОКАЗАТЕЛИ")
+                Text("CALCULATED STATS")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
@@ -195,13 +195,13 @@ struct AircraftStatsContent: View {
                 VStack(spacing: 10) {
                     CalculatedStatRow(
                         icon: "map",
-                        title: "Макс. дальность",
-                        value: "\(Int(gameState.aircraft.maxRange)) км"
+                        title: "Max range",
+                        value: "\(Int(gameState.aircraft.maxRange)) km"
                     )
                     
                     CalculatedStatRow(
                         icon: "bolt.fill",
-                        title: "Шанс уклонения",
+                        title: "Evasion chance",
                         value: "\(Int(gameState.aircraft.evasionChance * 100)) %"
                     )
                 }
@@ -220,7 +220,7 @@ struct PilotStatsContent: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Информация о пилоте
+            // Pilot information
             VStack(spacing: 16) {
                 ZStack {
                     Circle()
@@ -238,7 +238,7 @@ struct PilotStatsContent: View {
                 
                 HStack(spacing: 20) {
                     VStack(spacing: 4) {
-                        Text("УРОВЕНЬ")
+                        Text("LEVEL")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(.gray)
                         Text("\(gameState.pilot.level)")
@@ -247,7 +247,7 @@ struct PilotStatsContent: View {
                     }
                     
                     VStack(spacing: 4) {
-                        Text("ОЧКИ НАВЫКОВ")
+                        Text("SKILL POINTS")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(.gray)
                         Text("\(gameState.pilot.skillPoints)")
@@ -263,10 +263,10 @@ struct PilotStatsContent: View {
             )
             .padding(.horizontal)
             
-            // Прогресс опыта
+            // Experience progress
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("ОПЫТ ДО СЛЕДУЮЩЕГО УРОВНЯ")
+                    Text("EXPERIENCE TO NEXT LEVEL")
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.gray)
                     
@@ -299,9 +299,9 @@ struct PilotStatsContent: View {
             }
             .padding(.horizontal)
             
-            // Навыки
+            // Skills
             VStack(alignment: .leading, spacing: 16) {
-                Text("НАВЫКИ")
+                Text("SKILLS")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
@@ -334,9 +334,9 @@ struct PilotStatsContent: View {
                 )
             }
             
-            // Бонусы
+            // Bonuses
             VStack(alignment: .leading, spacing: 12) {
-                Text("БОНУСЫ")
+                Text("BONUSES")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
@@ -344,25 +344,25 @@ struct PilotStatsContent: View {
                 VStack(spacing: 10) {
                     CalculatedStatRow(
                         icon: "chart.line.uptrend.xyaxis",
-                        title: "Эффективность",
+                        title: "Effectiveness",
                         value: "×\(String(format: "%.2f", gameState.pilot.effectivenessMultiplier()))"
                     )
                     
                     CalculatedStatRow(
                         icon: "bolt.circle.fill",
-                        title: "Крит. шанс",
+                        title: "Crit chance",
                         value: "\(Int(gameState.pilot.criticalChance() * 100))%"
                     )
                     
                     CalculatedStatRow(
                         icon: "fuelpump.fill",
-                        title: "Экономия топлива",
+                        title: "Fuel economy",
                         value: "\(Int((1.0 - gameState.pilot.navigationBonus()) * 100))%"
                     )
                     
                     CalculatedStatRow(
                         icon: "dollarsign.circle.fill",
-                        title: "Бонус дохода",
+                        title: "Income bonus",
                         value: "+\(Int((gameState.pilot.efficiencyBonus() - 1.0) * 100))%"
                     )
                 }
@@ -542,7 +542,7 @@ struct PilotSkillRow: View {
                 }
             }
             
-            // Уровень навыка
+            // Skill level
             HStack(spacing: 4) {
                 ForEach(0..<10, id: \.self) { index in
                     RoundedRectangle(cornerRadius: 2)

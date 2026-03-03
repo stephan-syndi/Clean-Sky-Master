@@ -10,18 +10,18 @@ import Combine
 
 // MARK: - Economy View Model
 //
-// АКТИВНЫЙ MVVM VIEW MODEL (готов к использованию)
-// Использует struct EconomyData из Models/EconomyModel.swift
+// ACTIVE MVVM VIEW MODEL (ready to use)
+// Uses struct EconomyData from Models/EconomyModel.swift
 //
-// NOTE: Проект пока использует legacy class EconomyManager из Economy.swift
-// Этот ViewModel готов к использованию при миграции на полный MVVM
+// NOTE: Project still uses legacy class EconomyManager from Economy.swift
+// This ViewModel is ready to use when migrating to full MVVM
 
-/// ViewModel для управления экономикой
+/// ViewModel for economy management
 class EconomyViewModel: ObservableObject {
     @Published var economy: EconomyData
     
-    // Константы
-    private let fuelRefillInterval: TimeInterval = 300 // 5 минут
+    // Constants
+    private let fuelRefillInterval: TimeInterval = 300 // 5 minutes
     private let fuelRefillAmount = 5
     private let maxFuelStorage = 100
     
@@ -31,12 +31,12 @@ class EconomyViewModel: ObservableObject {
     
     // MARK: - Credits
     
-    /// Добавить кредиты
+    /// Add credits
     func addCredits(_ amount: Int) {
         economy.credits += amount
     }
     
-    /// Потратить кредиты
+    /// Spend credits
     func spendCredits(_ amount: Int) -> Bool {
         guard economy.credits >= amount else { return false }
         economy.credits -= amount
@@ -49,12 +49,12 @@ class EconomyViewModel: ObservableObject {
     
     // MARK: - Fuel
     
-    /// Добавить топливо
+    /// Add fuel
     func addFuel(_ amount: Int) {
         economy.fuelUnits = min(maxFuelStorage, economy.fuelUnits + amount)
     }
     
-    /// Использовать топливо
+    /// Use fuel
     func useFuel(_ amount: Int) -> Bool {
         guard economy.fuelUnits >= amount else { return false }
         economy.fuelUnits -= amount
@@ -67,12 +67,12 @@ class EconomyViewModel: ObservableObject {
     
     // MARK: - Parts
     
-    /// Добавить запчасти
+    /// Add parts
     func addParts(_ amount: Int) {
         economy.parts += amount
     }
     
-    /// Использовать запчасти
+    /// Use parts
     func useParts(_ amount: Int) -> Bool {
         guard economy.parts >= amount else { return false }
         economy.parts -= amount
@@ -85,7 +85,7 @@ class EconomyViewModel: ObservableObject {
     
     // MARK: - Auto Refill
     
-    /// Проверить и применить автозаправку
+    /// Check and apply auto refill
     func checkFuelRefill() {
         let now = Date()
         let timeSinceLastRefill = now.timeIntervalSince(economy.lastFuelRefillTime)
@@ -100,7 +100,7 @@ class EconomyViewModel: ObservableObject {
     
     // MARK: - Repair
     
-    /// Расчёт стоимости ремонта
+    /// Calculate repair cost
     func calculateRepairCost(currentHealth: Double) -> (credits: Int, parts: Int) {
         let healthDeficit = 100.0 - currentHealth
         let creditsNeeded = Int(healthDeficit * 5)
@@ -108,13 +108,13 @@ class EconomyViewModel: ObservableObject {
         return (creditsNeeded, partsNeeded)
     }
     
-    /// Проверка возможности ремонта
+    /// Check if repair is affordable
     func canAffordRepair(currentHealth: Double) -> Bool {
         let cost = calculateRepairCost(currentHealth: currentHealth)
         return economy.credits >= cost.credits && economy.parts >= cost.parts
     }
     
-    /// Выполнить ремонт
+    /// Perform repair
     func performRepair(currentHealth: Double) -> Bool {
         let cost = calculateRepairCost(currentHealth: currentHealth)
         guard spendCredits(cost.credits) && useParts(cost.parts) else {
@@ -125,12 +125,12 @@ class EconomyViewModel: ObservableObject {
     
     // MARK: - Refuel
     
-    /// Стоимость заправки (10 кредитов за единицу)
+    /// Refuel cost (10 credits per unit)
     func refuelCost(units: Int) -> Int {
         return units * 10
     }
     
-    /// Выполнить заправку
+    /// Perform refuel
     func performRefuel(units: Int) -> Bool {
         let cost = refuelCost(units: units)
         guard spendCredits(cost) else { return false }

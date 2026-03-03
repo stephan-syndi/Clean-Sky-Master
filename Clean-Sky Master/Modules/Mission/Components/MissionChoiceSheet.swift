@@ -21,7 +21,7 @@ struct MissionChoiceSheet: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // Заголовок
+                // Header
                 VStack(spacing: 12) {
                     ZStack {
                         Circle()
@@ -38,12 +38,12 @@ struct MissionChoiceSheet: View {
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
-                    Text("Сделайте выбор")
+                    Text("Make your choice")
                         .font(.system(size: 16))
                         .foregroundColor(.gray)
                 }
                 
-                // Варианты выбора
+                // Choice options
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(Array(choices.enumerated()), id: \.offset) { index, choice in
@@ -57,17 +57,17 @@ struct MissionChoiceSheet: View {
                                         .multilineTextAlignment(.leading)
                                     
                                     HStack(spacing: 16) {
-                                        // Риск
+                                        // Risk
                                         HStack(spacing: 4) {
                                             Image(systemName: "exclamationmark.triangle.fill")
                                                 .font(.system(size: 12))
                                                 .foregroundColor(choice.riskLevel > 0.6 ? .red : choice.riskLevel > 0.3 ? .orange : .green)
-                                            Text("Риск: \(Int(choice.riskLevel * 100))%")
+                                            Text("Risk: \(Int(choice.riskLevel * 100))%")
                                                 .font(.system(size: 13))
                                                 .foregroundColor(.gray)
                                         }
                                         
-                                        // Награда
+                                        // Reward
                                         HStack(spacing: 4) {
                                             Image(systemName: "star.fill")
                                                 .font(.system(size: 12))
@@ -96,7 +96,7 @@ struct MissionChoiceSheet: View {
                 }
                 
                 Button(action: { dismiss() }) {
-                    Text("Отмена")
+                    Text("Cancel")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity)

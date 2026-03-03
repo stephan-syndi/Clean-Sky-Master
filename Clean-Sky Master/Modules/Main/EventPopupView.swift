@@ -8,8 +8,8 @@
 import SwiftUI
 
 // MARK: - Event Models
-// NOTE: Это активная версия моделей событий.
-// Другая версия в Models/EconomyModel.swift планируется для будущей реализации.
+// NOTE: This is the active version of event models.
+// Another version in Models/EconomyModel.swift is planned for future implementation.
 
 enum EventType {
     case accident
@@ -74,7 +74,7 @@ struct EventPopupView: View {
     
     var body: some View {
         ZStack {
-            // Затемнённый фон
+            // Darkened background
             Color.black.opacity(0.7)
                 .ignoresSafeArea()
                 .onTapGesture {
@@ -84,9 +84,9 @@ struct EventPopupView: View {
                 }
             
             VStack(spacing: 0) {
-                // Карточка события
+                // Event card
                 VStack(spacing: 20) {
-                    // Иконка
+                    // Icon
                     ZStack {
                         Circle()
                             .fill(event.type.color.opacity(0.2))
@@ -99,14 +99,14 @@ struct EventPopupView: View {
                     .scaleEffect(scale)
                     .opacity(opacity)
                     
-                    // Заголовок
+                    // Title
                     Text(event.title)
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                         .opacity(opacity)
                     
-                    // Описание
+                    // Description
                     Text(event.description)
                         .font(.system(size: 16))
                         .foregroundColor(.gray)
@@ -115,13 +115,13 @@ struct EventPopupView: View {
                         .padding(.horizontal, 8)
                         .opacity(opacity)
                     
-                    // Показываем результат выбора
+                    // Show choice result
                     if showResult, let choice = selectedChoice {
                         ResultView(consequence: choice.consequence)
                             .transition(.scale.combined(with: .opacity))
                     }
                     
-                    // Варианты выбора или кнопка закрытия
+                    // Choice options or close button
                     if !showResult {
                         if let choices = event.choices {
                             ChoicesView(choices: choices) { choice in
@@ -129,11 +129,11 @@ struct EventPopupView: View {
                             }
                             .opacity(opacity)
                         } else {
-                            // Событие без выбора
+                            // Event without choice
                             Button(action: {
                                 dismissPopup()
                             }) {
-                                Text("Понятно")
+                                Text("Understood")
                                     .font(.system(size: 18, weight: .bold))
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
@@ -147,11 +147,11 @@ struct EventPopupView: View {
                             .opacity(opacity)
                         }
                     } else {
-                        // Кнопка продолжить после выбора
+                        // Continue button after choice
                         Button(action: {
                             dismissPopup()
                         }) {
-                            Text("Продолжить")
+                            Text("Continue")
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -270,12 +270,12 @@ struct ResultView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
-            // Показываем изменения
+            // Show changes
             VStack(spacing: 8) {
                 if let fuelChange = consequence.fuelChange {
                     ChangeIndicator(
                         icon: "fuelpump.fill",
-                        label: "Топливо",
+                        label: "Fuel",
                         value: fuelChange,
                         suffix: "%",
                         color: fuelChange > 0 ? .green : .red
@@ -285,7 +285,7 @@ struct ResultView: View {
                 if let healthChange = consequence.healthChange {
                     ChangeIndicator(
                         icon: "wrench.and.screwdriver.fill",
-                        label: "Здоровье",
+                        label: "Health",
                         value: healthChange,
                         suffix: "%",
                         color: healthChange > 0 ? .cyan : .red
@@ -295,7 +295,7 @@ struct ResultView: View {
                 if let moneyChange = consequence.moneyChange {
                     ChangeIndicator(
                         icon: "star.fill",
-                        label: "Очки",
+                        label: "Points",
                         value: Double(moneyChange),
                         suffix: "",
                         color: moneyChange > 0 ? .yellow : .red
@@ -305,7 +305,7 @@ struct ResultView: View {
                 if let expChange = consequence.experienceChange {
                     ChangeIndicator(
                         icon: "chart.line.uptrend.xyaxis",
-                        label: "Опыт",
+                        label: "Experience",
                         value: Double(expChange),
                         suffix: " XP",
                         color: .purple
@@ -377,16 +377,16 @@ struct ScaleButtonStyle: ButtonStyle {
 extension GameEvent {
     static var sampleEvents: [GameEvent] {
         [
-            // Авария
+            // Accident
             GameEvent(
                 type: .accident,
-                title: "ОТКАЗ ДВИГАТЕЛЯ!",
-                description: "Во время полёта произошёл частичный отказ левого двигателя. Требуется принять решение.",
+                title: "ENGINE FAILURE!",
+                description: "During flight, a partial failure of the left engine occurred. A decision is required.",
                 choices: [
                     EventChoice(
-                        text: "Экстренная посадка в ближайшем аэропорту",
+                        text: "Emergency landing at the nearest airport",
                         consequence: EventConsequence(
-                            description: "Вы успешно совершили вынужденную посадку. Самолёт требует ремонта.",
+                            description: "You successfully made an emergency landing. The aircraft requires repair.",
                             fuelChange: -10,
                             healthChange: -15,
                             moneyChange: -200,
@@ -394,9 +394,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Попытаться долететь до пункта назначения",
+                        text: "Attempt to reach the destination",
                         consequence: EventConsequence(
-                            description: "Рискованный манёвр! Вам удалось долететь, но самолёт сильно пострадал.",
+                            description: "Risky maneuver! You managed to reach your destination, but the aircraft was heavily damaged.",
                             fuelChange: -20,
                             healthChange: -30,
                             moneyChange: 100,
@@ -407,16 +407,16 @@ extension GameEvent {
                 autoConsequence: nil
             ),
             
-            // Находка
+            // Discovery
             GameEvent(
                 type: .discovery,
-                title: "НЕОБЫЧНАЯ НАХОДКА",
-                description: "Во время осмотра самолёта механик обнаружил спрятанный тайник с ценностями!",
+                title: "UNUSUAL DISCOVERY",
+                description: "During aircraft inspection, the mechanic discovered a hidden cache of valuables!",
                 choices: [
                     EventChoice(
-                        text: "Забрать находку себе",
+                        text: "Keep the find for yourself",
                         consequence: EventConsequence(
-                            description: "Вы нашли 500 очков! Однако это может привлечь нежелательное внимание.",
+                            description: "You found 500 points! However, this may attract unwanted attention.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: 500,
@@ -424,9 +424,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Передать находку властям",
+                        text: "Turn the find over to authorities",
                         consequence: EventConsequence(
-                            description: "Власти отблагодарили вас за честность и выдали награду. Репутация повышена!",
+                            description: "The authorities thanked you for your honesty and issued a reward. Reputation increased!",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: 300,
@@ -437,16 +437,16 @@ extension GameEvent {
                 autoConsequence: nil
             ),
             
-            // Возможность
+            // Opportunity
             GameEvent(
                 type: .opportunity,
-                title: "СРОЧНЫЙ ЗАКАЗ",
-                description: "Поступил срочный заказ на VIP-доставку. Требуется немедленный вылет, но вознаграждение щедрое.",
+                title: "URGENT ORDER",
+                description: "An urgent VIP delivery order has been received. Immediate departure required, but the reward is generous.",
                 choices: [
                     EventChoice(
-                        text: "Принять заказ",
+                        text: "Accept the order",
                         consequence: EventConsequence(
-                            description: "Успешно выполнили срочную доставку! Клиент очень доволен.",
+                            description: "Successfully completed urgent delivery! Client is very satisfied.",
                             fuelChange: -30,
                             healthChange: -5,
                             moneyChange: 800,
@@ -454,9 +454,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Отказаться от заказа",
+                        text: "Decline the order",
                         consequence: EventConsequence(
-                            description: "Вы решили отдохнуть. Это был мудрый выбор для восстановления сил.",
+                            description: "You decided to rest. This was a wise choice for recovery.",
                             fuelChange: 10,
                             healthChange: 10,
                             moneyChange: nil,
@@ -467,14 +467,14 @@ extension GameEvent {
                 autoConsequence: nil
             ),
             
-            // Предупреждение
+            // Warning
             GameEvent(
                 type: .warning,
-                title: "МЕТЕОПРЕДУПРЕЖДЕНИЕ",
-                description: "Синоптики предупреждают о надвигающемся шторме на вашем маршруте через 2 часа.",
+                title: "WEATHER WARNING",
+                description: "Weather forecasters warn of an approaching storm on your route in 2 hours.",
                 choices: nil,
                 autoConsequence: EventConsequence(
-                    description: "Вы получили предупреждение вовремя. Рекомендуется отложить полёт или изменить маршрут.",
+                    description: "You received the warning in time. It is recommended to postpone the flight or change the route.",
                     fuelChange: nil,
                     healthChange: nil,
                     moneyChange: nil,
@@ -482,14 +482,14 @@ extension GameEvent {
                 )
             ),
             
-            // Достижение
+            // Achievement
             GameEvent(
                 type: .achievement,
-                title: "НОВЫЙ РЕКОРД!",
-                description: "Поздравляем! Вы совершили 100-й успешный полёт. Ваш профессионализм растёт!",
+                title: "NEW RECORD!",
+                description: "Congratulations! You have completed your 100th successful flight. Your professionalism is growing!",
                 choices: nil,
                 autoConsequence: EventConsequence(
-                    description: "Получена награда за выдающиеся достижения в авиации!",
+                    description: "Received award for outstanding achievements in aviation!",
                     fuelChange: nil,
                     healthChange: nil,
                     moneyChange: 1000,
@@ -497,14 +497,14 @@ extension GameEvent {
                 )
             ),
             
-            // Авария простая
+            // Simple accident
             GameEvent(
                 type: .accident,
-                title: "ПОВРЕЖДЕНИЕ ШАССИ",
-                description: "При посадке произошёл сильный удар. Шасси повреждено, требуется срочный ремонт.",
+                title: "LANDING GEAR DAMAGE",
+                description: "A strong impact occurred during landing. Landing gear damaged, urgent repair required.",
                 choices: nil,
                 autoConsequence: EventConsequence(
-                    description: "Самолёт отправлен на ремонт. Придётся потратиться на восстановление.",
+                    description: "Aircraft sent for repair. Will have to spend on restoration.",
                     fuelChange: nil,
                     healthChange: -25,
                     moneyChange: -350,
@@ -512,14 +512,14 @@ extension GameEvent {
                 )
             ),
             
-            // Находка простая
+            // Simple discovery
             GameEvent(
                 type: .discovery,
-                title: "БОНУС ОТ СПОНСОРА",
-                description: "Ваш основной спонсор впечатлён вашими результатами и выделил дополнительное финансирование!",
+                title: "SPONSOR BONUS",
+                description: "Your main sponsor is impressed with your results and has allocated additional funding!",
                 choices: nil,
                 autoConsequence: EventConsequence(
-                    description: "Получен бонус от спонсора!",
+                    description: "Received bonus from sponsor!",
                     fuelChange: nil,
                     healthChange: nil,
                     moneyChange: 600,
@@ -527,16 +527,16 @@ extension GameEvent {
                 )
             ),
             
-            // Выбор с риском
+            // Choice with risk
             GameEvent(
                 type: .opportunity,
-                title: "ЭКСПЕРИМЕНТАЛЬНОЕ ТОПЛИВО",
-                description: "Поставщик предлагает протестировать новый вид экологичного топлива со скидкой 50%.",
+                title: "EXPERIMENTAL FUEL",
+                description: "The supplier offers to test a new type of eco-friendly fuel at a 50% discount.",
                 choices: [
                     EventChoice(
-                        text: "Согласиться на эксперимент",
+                        text: "Agree to the experiment",
                         consequence: EventConsequence(
-                            description: "Эксперимент удался! Топливо показало отличные результаты, эффективность выросла.",
+                            description: "Experiment succeeded! The fuel showed excellent results, efficiency increased.",
                             fuelChange: 20,
                             healthChange: 5,
                             moneyChange: -100,
@@ -544,9 +544,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Использовать обычное топливо",
+                        text: "Use regular fuel",
                         consequence: EventConsequence(
-                            description: "Вы остались при своём. Надёжность проверенного топлива важнее экспериментов.",
+                            description: "You stuck with what you know. The reliability of proven fuel is more important than experiments.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: -200,
@@ -554,9 +554,9 @@ extension GameEvent {
                         )
                     ),
                     EventChoice(
-                        text: "Отложить заправку",
+                        text: "Postpone refueling",
                         consequence: EventConsequence(
-                            description: "Решили подождать лучших условий.",
+                            description: "Decided to wait for better conditions.",
                             fuelChange: nil,
                             healthChange: nil,
                             moneyChange: nil,

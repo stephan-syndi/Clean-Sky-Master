@@ -11,19 +11,19 @@ import Combine
 struct ContentView: View {
     @StateObject private var gameState = GameState()
     
-    // Таймер для автоматического восстановления топлива
+    // Timer for automatic fuel refill
     let fuelRefillTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     var body: some View {
         TabView {
             MainDashboardView()
                 .tabItem {
-                    Label("Панель", systemImage: "gauge.with.dots.needle.67percent")
+                    Label("Dashboard", systemImage: "gauge.with.dots.needle.67percent")
                 }
             
             MissionSelectView(gameState: gameState)
                 .tabItem {
-                    Label("Миссии", systemImage: "airplane.departure")
+                    Label("Missions", systemImage: "airplane.departure")
                 }
                 .background(
                     LinearGradient(
@@ -38,22 +38,22 @@ struct ContentView: View {
             
             ShopView()
                 .tabItem {
-                    Label("Магазин", systemImage: "cart.fill")
+                    Label("Shop", systemImage: "cart.fill")
                 }
             
             MissionLogView()
                 .tabItem {
-                    Label("Журнал", systemImage: "book.pages")
+                    Label("Log", systemImage: "book.pages")
                 }
         }
         .environmentObject(gameState)
         .tint(.blue)
         .onAppear {
-            // Проверяем автоматическое пополнение топлива при запуске
+            // Check automatic fuel refill on startup
             gameState.economy.checkFuelRefill()
         }
         .onReceive(fuelRefillTimer) { _ in
-            // Проверяем автоматическое пополнение топлива каждую минуту
+            // Check automatic fuel refill every minute
             gameState.economy.checkFuelRefill()
         }
     }

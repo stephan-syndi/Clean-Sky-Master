@@ -8,20 +8,20 @@
 import Foundation
 
 // MARK: - Economy (Model)
-// NOTE: Это MVVM модели для будущей реализации.
-// Текущая активная версия находится в Economy.swift (legacy)
+// NOTE: These are MVVM models for future implementation.
+// Current active version is in Economy.swift (legacy)
 //
-// ДУБЛИКАТЫ УДАЛЕНЫ:
-// - ShopItem, ShopCategory → используйте версии из Economy.swift
-// - Upgrade, UpgradeEffect, UpgradeCategory → используйте версии из UpgradeView.swift
-// - GameEvent, EventChoice, EventConsequence → используйте версии из EventPopupView.swift
+// DUPLICATES REMOVED:
+// - ShopItem, ShopCategory → use versions from Economy.swift
+// - Upgrade, UpgradeEffect, UpgradeCategory → use versions from UpgradeView.swift
+// - GameEvent, EventChoice, EventConsequence → use versions from EventPopupView.swift
 
-/// Модель экономики - чистые данные для будущей MVVM архитектуры
+/// Economy model - clean data for future MVVM architecture
 struct EconomyData {
-    var credits: Int // Основная валюта
-    var fuelUnits: Int // Топливо как ресурс
-    var parts: Int // Запчасти для ремонта
-    var lastFuelRefillTime: Date // Время последней автозаправки
+    var credits: Int // Main currency
+    var fuelUnits: Int // Fuel as a resource
+    var parts: Int // Repair parts
+    var lastFuelRefillTime: Date // Time of last auto-refill
     
     init(
         credits: Int = 1000,
