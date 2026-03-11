@@ -160,9 +160,9 @@
 				413960522F518C7C00864FA9 /* Sources */,
 				413960532F518C7C00864FA9 /* Frameworks */,
 				413960542F518C7C00864FA9 /* Resources */,
-				416982C72F571E100022A200 /* Embed Foundation Extensions */,
-				87750E20D6E0D99174ECF3C0 /* [CP] Embed Pods Frameworks */,
 				41C08A892F616085009A7AD7 /* Embed Frameworks */,
+				87750E20D6E0D99174ECF3C0 /* [CP] Embed Pods Frameworks */,
+				416982C72F571E100022A200 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -572,7 +572,7 @@
 				INFOPLIST_FILE = notifications/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = notifications;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -608,7 +608,7 @@
 				INFOPLIST_FILE = notifications/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = notifications;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
