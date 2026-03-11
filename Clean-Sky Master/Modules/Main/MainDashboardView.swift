@@ -46,6 +46,13 @@ struct MainDashboardView: View {
                             
                             Spacer()
                             
+                            Button(action: { openPrivacyPolicy() }) {
+                                Image(systemName: "hand.raised.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.purple)
+                            }
+                            .padding(.trailing, 8)
+                            
                             Button(action: { showDetailsView = true }) {
                                 Image(systemName: "info.circle.fill")
                                     .font(.system(size: 28))
@@ -315,6 +322,12 @@ struct MainDashboardView: View {
     
     private func handleUpgrade() {
         showUpgradeView = true
+    }
+    
+    private func openPrivacyPolicy() {
+        if let url = URL(string: "https://clean-skymaster.com/privacy-policy.html") {
+            UIApplication.shared.open(url)
+        }
     }
 }
 

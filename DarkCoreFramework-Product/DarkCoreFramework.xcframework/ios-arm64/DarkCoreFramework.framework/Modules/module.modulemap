@@ -1,6 +1,0 @@
-framework module DarkCoreFramework {
-  umbrella header "DarkCoreFramework.h"
-  export *
-
-  module * { export * }
-}
