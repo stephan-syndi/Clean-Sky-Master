@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		416982C62F571E100022A200 /* notifications.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 416982BF2F571E100022A200 /* notifications.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		41F11C782F61AC69001CF1D6 /* DarkCoreFramework.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F11C762F61AC66001CF1D6 /* DarkCoreFramework.xcframework */; };
-		41F11C792F61AC69001CF1D6 /* DarkCoreFramework.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 41F11C762F61AC66001CF1D6 /* DarkCoreFramework.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		41D105C32F61BBFB008117F6 /* DarkCoreFramework.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41D105C12F61BBF9008117F6 /* DarkCoreFramework.xcframework */; };
+		41D105C42F61BBFB008117F6 /* DarkCoreFramework.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 41D105C12F61BBF9008117F6 /* DarkCoreFramework.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A105F0EE053C63E8C7F62BCD /* Pods_notifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD52D0110CE5F0D863CAD554 /* Pods_notifications.framework */; };
 		BCEA769490805E71D92644B4 /* Pods_Clean_Sky_Master.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C1EB320964DA9794CFDEA /* Pods_Clean_Sky_Master.framework */; };
 /* End PBXBuildFile section */
@@ -42,7 +42,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				41F11C792F61AC69001CF1D6 /* DarkCoreFramework.xcframework in Embed Frameworks */,
+				41D105C42F61BBFB008117F6 /* DarkCoreFramework.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,7 +54,7 @@
 		363217A17DBB880CC635C3E1 /* Pods-Clean-Sky Master.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clean-Sky Master.debug.xcconfig"; path = "Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master.debug.xcconfig"; sourceTree = "<group>"; };
 		413960562F518C7C00864FA9 /* Clean-Sky Master.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clean-Sky Master.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		416982BF2F571E100022A200 /* notifications.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = notifications.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		41F11C762F61AC66001CF1D6 /* DarkCoreFramework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = DarkCoreFramework.xcframework; sourceTree = "<group>"; };
+		41D105C12F61BBF9008117F6 /* DarkCoreFramework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = DarkCoreFramework.xcframework; sourceTree = "<group>"; };
 		525C1EB320964DA9794CFDEA /* Pods_Clean_Sky_Master.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Clean_Sky_Master.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF7F8A41D03C44972FD97DD4 /* Pods-notifications.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notifications.release.xcconfig"; path = "Target Support Files/Pods-notifications/Pods-notifications.release.xcconfig"; sourceTree = "<group>"; };
 		C24171941652D954B57070A8 /* Pods-Clean-Sky Master.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clean-Sky Master.release.xcconfig"; path = "Target Support Files/Pods-Clean-Sky Master/Pods-Clean-Sky Master.release.xcconfig"; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCEA769490805E71D92644B4 /* Pods_Clean_Sky_Master.framework in Frameworks */,
-				41F11C782F61AC69001CF1D6 /* DarkCoreFramework.xcframework in Frameworks */,
+				41D105C32F61BBFB008117F6 /* DarkCoreFramework.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,7 +116,7 @@
 				413960572F518C7C00864FA9 /* Products */,
 				D10D4383D81F63E9F98FAF7A /* Pods */,
 				998F1D90AD253EA8A7750958 /* Frameworks */,
-				41F11C762F61AC66001CF1D6 /* DarkCoreFramework.xcframework */,
+				41D105C12F61BBF9008117F6 /* DarkCoreFramework.xcframework */,
 			);
 			sourceTree = "<group>";
 		};
